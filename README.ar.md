@@ -6,9 +6,9 @@
 
 إيتار سينما تطبيق تلفزيوني تجريبي مستقل ومفتوح المصدر، مبني على حزمة [`@bougarnem/itar` المنشورة على npm](https://www.npmjs.com/package/@bougarnem/itar). تصفّح كتالوج المشاهدة وجرّب انتقال التركيز بين الصفوف واستعادته بعد فتح صفحة التفاصيل أو الخروج من المشغّل.
 
-[![الصفحة الرئيسية بالعربية في إيتار سينما، والتركيز على البطاقة الأولى من اليمين](docs/images/cinema-browser.jpg)](docs/images/itar-cinema-preview.mp4)
+[![الصفحة الرئيسية بالعربية في إيتار سينما، والتركيز على البطاقة الأولى من اليمين](docs/images/cinema-browser.ar.jpg)](docs/images/itar-cinema-preview.ar.mp4)
 
-[شاهد العرض المسجّل من المتصفح (MP4)](docs/images/itar-cinema-preview.mp4)
+[شاهد العرض المسجّل بالعربية (MP4)](docs/images/itar-cinema-preview.ar.mp4)
 
 ## ما يمكنك تجربته
 

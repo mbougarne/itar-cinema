@@ -4,9 +4,9 @@
 
 Itar Cinema is a standalone, open-source TV demo built with the published [`@bougarnem/itar` npm package](https://www.npmjs.com/package/@bougarnem/itar). Browse a streaming catalogue and see how focus moves and returns as you switch shelves, open a title, or leave the player.
 
-[![Arabic Home in Itar Cinema, with focus on the rightmost title card](docs/images/cinema-browser.jpg)](docs/images/itar-cinema-preview.mp4)
+[![English Home in Itar Cinema, with focus on the leftmost title card](docs/images/cinema-browser.jpg)](docs/images/itar-cinema-preview.mp4)
 
-[Watch the browser showcase (MP4)](docs/images/itar-cinema-preview.mp4)
+[Watch the English showcase (MP4)](docs/images/itar-cinema-preview.mp4)
 
 ## What to try
 
