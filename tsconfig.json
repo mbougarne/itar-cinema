@@ -1,0 +1,14 @@
+{
+  "extends": "@react-native/typescript-config",
+  "compilerOptions": {
+    "types": ["react"],
+    "strict": true,
+    "paths": {
+      "@react-native-tvos/virtualized-lists": [
+        "./build/tv-types/virtualized-lists/index.d.ts"
+      ]
+    }
+  },
+  "include": ["App.tsx", "ott/**/*.ts", "ott/**/*.tsx"],
+  "exclude": ["ott/**/*.web.tsx", "ott/**/*.web.ts", "node_modules", "build"]
+}

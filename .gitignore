@@ -1,0 +1,17 @@
+node_modules/
+build/
+output/
+.playwright-cli/
+android/
+ios/
+.env
+.env.*
+!.env.example
+*.log
+.DS_Store
+local.properties
+*.p12
+*.pem
+*.keystore
+*.jks
+*.mobileprovision

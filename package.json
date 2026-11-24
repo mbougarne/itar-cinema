@@ -1,0 +1,60 @@
+{
+  "name": "itar-cinema",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "lint": "eslint App.tsx ott web --ext .js,.cjs,.ts,.tsx --max-warnings 0",
+    "lint:fix": "npm run lint -- --fix",
+    "format": "prettier --write \"App.tsx\" \"ott/**/*.{ts,tsx}\" \"web/**/*.{ts,tsx,cjs,json}\" \"*.json\" && npm run lint:fix",
+    "format:check": "prettier --check \"App.tsx\" \"ott/**/*.{ts,tsx}\" \"web/**/*.{ts,tsx,cjs,json}\" \"*.json\"",
+    "check": "npm run lint && npm run format:check",
+    "start": "react-native start --port 8096",
+    "android": "react-native run-android --port 8096",
+    "tvos": "react-native run-ios --port 8096 --scheme ItarProbe",
+    "bundle": "react-native bundle --entry-file index.js --platform android --dev false --bundle-output build/cinema.android.js --max-workers 2",
+    "build:web": "node web/build.cjs browser",
+    "build:tizen": "node web/build.cjs tizen",
+    "build:webos": "node web/build.cjs webos",
+    "web": "npm run build:web && npm run web:serve",
+    "web:serve": "python3 -m http.server 8081 --bind 127.0.0.1 --directory build/web/browser",
+    "typecheck": "node scripts/prepare-tv-types.cjs && tsc --noEmit",
+    "typecheck:web": "node scripts/prepare-tv-types.cjs && tsc --noEmit -p web/tsconfig.json",
+    "test": "node --test scripts/*.test.cjs",
+    "native:generate": "node scripts/generate-native.cjs",
+    "tmdb:proxy": "node --env-file-if-exists=.env scripts/tmdb-proxy.cjs",
+    "tmdb:mock": "node scripts/tmdb-mock.cjs"
+  },
+  "dependencies": {
+    "@bougarnem/itar": "0.1.0-beta",
+    "@react-native-async-storage/async-storage": "2.2.0",
+    "hls.js": "1.7.4",
+    "react": "19.2.0",
+    "react-dom": "19.2.0",
+    "react-native": "npm:react-native-tvos@0.83.0-0",
+    "react-native-video": "6.19.3",
+    "react-native-web": "0.21.4"
+  },
+  "packageManager": "npm@10.9.9",
+  "engines": {
+    "node": "22.23.4",
+    "npm": "10.9.9"
+  },
+  "devDependencies": {
+    "@babel/core": "7.29.7",
+    "@babel/runtime": "7.28.2",
+    "@react-native-community/cli": "20.2.0",
+    "@react-native-community/cli-platform-android": "20.2.0",
+    "@react-native-community/cli-platform-ios": "20.2.0",
+    "@react-native/babel-preset": "0.83.0",
+    "@react-native/eslint-config": "0.83.0",
+    "@react-native/metro-config": "0.83.0",
+    "@react-native/typescript-config": "0.83.0",
+    "@types/react": "19.2.0",
+    "@types/react-dom": "19.2.0",
+    "@types/react-native-web": "0.19.2",
+    "esbuild": "0.28.2",
+    "eslint": "8.57.1",
+    "prettier": "2.8.8",
+    "typescript": "5.8.3"
+  }
+}

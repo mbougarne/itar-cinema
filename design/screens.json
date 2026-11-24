@@ -1,0 +1,90 @@
+[
+  {
+    "screen": "Home",
+    "file": "screens/01-home.png",
+    "width": 1672,
+    "height": 941,
+    "sha256": "23a91036f7425353cc48a17c65d87a7febdf99f2461913e38e33284d78950744",
+    "note": "Featured story and poster rail; sidebar navigation."
+  },
+  {
+    "screen": "Movies",
+    "file": "screens/02-movies.png",
+    "width": 1672,
+    "height": 941,
+    "sha256": "7f2cb22e4ed1deb502f63fc049a5637f600de0b578bcc429e5f393df86504010",
+    "note": "Movie catalogue with landscape and poster rails."
+  },
+  {
+    "screen": "Series",
+    "file": "screens/03-series.png",
+    "width": 1672,
+    "height": 941,
+    "sha256": "a9c4477e0a81a604e56abd9220adac4b6bf9382bd238f3c5526f37b57e1dbb2c",
+    "note": "Series catalogue using the same browsing structure."
+  },
+  {
+    "screen": "Search \u2014 results",
+    "file": "screens/04-search.png",
+    "width": 1672,
+    "height": 941,
+    "sha256": "3ea14c0e46b72ad2916e13551647738730b8f9b797d4d234c08e08e993829906",
+    "note": "A\u2013Z remote keyboard beside matching titles."
+  },
+  {
+    "screen": "Profile",
+    "file": "screens/05-profile.png",
+    "width": 1672,
+    "height": 941,
+    "sha256": "00ba8a44f9175b9b5c54a8da768405a8521ad42023a0b4cec6256edbb9b475a2",
+    "note": "Current profile and focused profile are distinct."
+  },
+  {
+    "screen": "Settings",
+    "file": "screens/06-settings.png",
+    "width": 1672,
+    "height": 941,
+    "sha256": "6dd37863e5956297d1526e6a5da632bcc488608b86c7b14a5f3e256db592c97f",
+    "note": "Appearance and existing local fixture controls."
+  },
+  {
+    "screen": "Title details",
+    "file": "screens/07-details.png",
+    "width": 1672,
+    "height": 941,
+    "sha256": "893cd1b2c8fc275683e85ef32fed8f4c1b5741d269934fbb30bce044a03df873",
+    "note": "Title metadata, Back action and cast; background navigation inactive."
+  },
+  {
+    "screen": "Cast biography",
+    "file": "screens/08-cast.png",
+    "width": 1672,
+    "height": 941,
+    "sha256": "46c82884b7810922788f1b79c455993213d419bdb5d89401ed1b98fe35d0b2a6",
+    "note": "Inline biography within title details, not a new route."
+  },
+  {
+    "screen": "Search \u2014 no matches",
+    "file": "screens/09-search-empty.png",
+    "width": 1672,
+    "height": 941,
+    "sha256": "087a314ece597abc5d8af6b0a2a2c9aea8fb9905317ea93802ea89bbd13b30d1",
+    "note": "Query and keyboard remain available; Clear focused."
+  },
+  {
+    "screen": "Catalogue \u2014 loading",
+    "file": "screens/10-loading.png",
+    "width": 1672,
+    "height": 941,
+    "sha256": "94bb72e5185bb0caf19c6526027875c2c8d24cef74006af4dca6427198637d82",
+    "note": "Stable decorative skeletons; sidebar remains available."
+  },
+  {
+    "screen": "Catalogue \u2014 retry message",
+    "file": "screens/11-error.png",
+    "width": 1672,
+    "height": 941,
+    "sha256": "41041591c14aa9e2d7e86137568dc12ff2b892657cd75d25aa47c182b4695378",
+    "note": "Loaded content remains visible above the error and Retry action."
+  }
+]

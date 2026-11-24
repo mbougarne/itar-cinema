@@ -1,0 +1,838 @@
+[
+  {
+    "kickoff": "2026-07-19T19:00Z",
+    "round": "Final",
+    "home": "Spain",
+    "away": "Argentina",
+    "venue": "New York/New Jersey (East Rutherford)",
+    "score": "1–0"
+  },
+  {
+    "kickoff": "2026-07-18T21:00Z",
+    "round": "Match for third place",
+    "home": "France",
+    "away": "England",
+    "venue": "Miami (Miami Gardens)",
+    "score": "4–6"
+  },
+  {
+    "kickoff": "2026-07-15T19:00Z",
+    "round": "Semi-final",
+    "home": "England",
+    "away": "Argentina",
+    "venue": "Atlanta",
+    "score": "1–2"
+  },
+  {
+    "kickoff": "2026-07-14T19:00Z",
+    "round": "Semi-final",
+    "home": "France",
+    "away": "Spain",
+    "venue": "Dallas (Arlington)",
+    "score": "0–2"
+  },
+  {
+    "kickoff": "2026-07-12T01:00Z",
+    "round": "Quarter-final",
+    "home": "Argentina",
+    "away": "Switzerland",
+    "venue": "Kansas City",
+    "score": "3–1"
+  },
+  {
+    "kickoff": "2026-07-11T21:00Z",
+    "round": "Quarter-final",
+    "home": "Norway",
+    "away": "England",
+    "venue": "Miami (Miami Gardens)",
+    "score": "1–2"
+  },
+  {
+    "kickoff": "2026-07-10T19:00Z",
+    "round": "Quarter-final",
+    "home": "Spain",
+    "away": "Belgium",
+    "venue": "Los Angeles (Inglewood)",
+    "score": "2–1"
+  },
+  {
+    "kickoff": "2026-07-09T20:00Z",
+    "round": "Quarter-final",
+    "home": "France",
+    "away": "Morocco",
+    "venue": "Boston (Foxborough)",
+    "score": "2–0"
+  },
+  {
+    "kickoff": "2026-07-07T20:00Z",
+    "round": "Round of 16",
+    "home": "Switzerland",
+    "away": "Colombia",
+    "venue": "Vancouver",
+    "score": "0–0",
+    "penalties": "4–3"
+  },
+  {
+    "kickoff": "2026-07-07T16:00Z",
+    "round": "Round of 16",
+    "home": "Argentina",
+    "away": "Egypt",
+    "venue": "Atlanta",
+    "score": "3–2"
+  },
+  {
+    "kickoff": "2026-07-07T00:00Z",
+    "round": "Round of 16",
+    "home": "USA",
+    "away": "Belgium",
+    "venue": "Seattle",
+    "score": "1–4"
+  },
+  {
+    "kickoff": "2026-07-06T19:00Z",
+    "round": "Round of 16",
+    "home": "Portugal",
+    "away": "Spain",
+    "venue": "Dallas (Arlington)",
+    "score": "0–1"
+  },
+  {
+    "kickoff": "2026-07-06T00:00Z",
+    "round": "Round of 16",
+    "home": "Mexico",
+    "away": "England",
+    "venue": "Mexico City",
+    "score": "2–3"
+  },
+  {
+    "kickoff": "2026-07-05T20:00Z",
+    "round": "Round of 16",
+    "home": "Brazil",
+    "away": "Norway",
+    "venue": "New York/New Jersey (East Rutherford)",
+    "score": "1–2"
+  },
+  {
+    "kickoff": "2026-07-04T21:00Z",
+    "round": "Round of 16",
+    "home": "Paraguay",
+    "away": "France",
+    "venue": "Philadelphia",
+    "score": "0–1"
+  },
+  {
+    "kickoff": "2026-07-04T17:00Z",
+    "round": "Round of 16",
+    "home": "Canada",
+    "away": "Morocco",
+    "venue": "Houston",
+    "score": "0–3"
+  },
+  {
+    "kickoff": "2026-07-04T01:30Z",
+    "round": "Round of 32",
+    "home": "Colombia",
+    "away": "Ghana",
+    "venue": "Kansas City",
+    "score": "1–0"
+  },
+  {
+    "kickoff": "2026-07-03T22:00Z",
+    "round": "Round of 32",
+    "home": "Argentina",
+    "away": "Cape Verde",
+    "venue": "Miami (Miami Gardens)",
+    "score": "3–2"
+  },
+  {
+    "kickoff": "2026-07-03T18:00Z",
+    "round": "Round of 32",
+    "home": "Australia",
+    "away": "Egypt",
+    "venue": "Dallas (Arlington)",
+    "score": "1–1",
+    "penalties": "2–4"
+  },
+  {
+    "kickoff": "2026-07-03T03:00Z",
+    "round": "Round of 32",
+    "home": "Switzerland",
+    "away": "Algeria",
+    "venue": "Vancouver",
+    "score": "2–0"
+  },
+  {
+    "kickoff": "2026-07-02T23:00Z",
+    "round": "Round of 32",
+    "home": "Portugal",
+    "away": "Croatia",
+    "venue": "Toronto",
+    "score": "2–1"
+  },
+  {
+    "kickoff": "2026-07-02T19:00Z",
+    "round": "Round of 32",
+    "home": "Spain",
+    "away": "Austria",
+    "venue": "Los Angeles (Inglewood)",
+    "score": "3–0"
+  },
+  {
+    "kickoff": "2026-07-02T00:00Z",
+    "round": "Round of 32",
+    "home": "USA",
+    "away": "Bosnia & Herzegovina",
+    "venue": "San Francisco Bay Area (Santa Clara)",
+    "score": "2–0"
+  },
+  {
+    "kickoff": "2026-07-01T20:00Z",
+    "round": "Round of 32",
+    "home": "Belgium",
+    "away": "Senegal",
+    "venue": "Seattle",
+    "score": "3–2"
+  },
+  {
+    "kickoff": "2026-07-01T16:00Z",
+    "round": "Round of 32",
+    "home": "England",
+    "away": "DR Congo",
+    "venue": "Atlanta",
+    "score": "2–1"
+  },
+  {
+    "kickoff": "2026-07-01T01:00Z",
+    "round": "Round of 32",
+    "home": "Mexico",
+    "away": "Ecuador",
+    "venue": "Mexico City",
+    "score": "2–0"
+  },
+  {
+    "kickoff": "2026-06-30T21:00Z",
+    "round": "Round of 32",
+    "home": "France",
+    "away": "Sweden",
+    "venue": "New York/New Jersey (East Rutherford)",
+    "score": "3–0"
+  },
+  {
+    "kickoff": "2026-06-30T17:00Z",
+    "round": "Round of 32",
+    "home": "Ivory Coast",
+    "away": "Norway",
+    "venue": "Dallas (Arlington)",
+    "score": "1–2"
+  },
+  {
+    "kickoff": "2026-06-30T01:00Z",
+    "round": "Round of 32",
+    "home": "Netherlands",
+    "away": "Morocco",
+    "venue": "Monterrey (Guadalupe)",
+    "score": "1–1",
+    "penalties": "2–3"
+  },
+  {
+    "kickoff": "2026-06-29T20:30Z",
+    "round": "Round of 32",
+    "home": "Germany",
+    "away": "Paraguay",
+    "venue": "Boston (Foxborough)",
+    "score": "1–1",
+    "penalties": "3–4"
+  },
+  {
+    "kickoff": "2026-06-29T17:00Z",
+    "round": "Round of 32",
+    "home": "Brazil",
+    "away": "Japan",
+    "venue": "Houston",
+    "score": "2–1"
+  },
+  {
+    "kickoff": "2026-06-28T19:00Z",
+    "round": "Round of 32",
+    "home": "South Africa",
+    "away": "Canada",
+    "venue": "Los Angeles (Inglewood)",
+    "score": "0–1"
+  },
+  {
+    "kickoff": "2026-06-28T02:00Z",
+    "round": "Matchday 17",
+    "home": "Algeria",
+    "away": "Austria",
+    "venue": "Kansas City",
+    "score": "3–3"
+  },
+  {
+    "kickoff": "2026-06-28T02:00Z",
+    "round": "Matchday 17",
+    "home": "Jordan",
+    "away": "Argentina",
+    "venue": "Dallas (Arlington)",
+    "score": "1–3"
+  },
+  {
+    "kickoff": "2026-06-27T23:30Z",
+    "round": "Matchday 17",
+    "home": "Colombia",
+    "away": "Portugal",
+    "venue": "Miami (Miami Gardens)",
+    "score": "0–0"
+  },
+  {
+    "kickoff": "2026-06-27T23:30Z",
+    "round": "Matchday 17",
+    "home": "DR Congo",
+    "away": "Uzbekistan",
+    "venue": "Atlanta",
+    "score": "3–1"
+  },
+  {
+    "kickoff": "2026-06-27T21:00Z",
+    "round": "Matchday 17",
+    "home": "Panama",
+    "away": "England",
+    "venue": "New York/New Jersey (East Rutherford)",
+    "score": "0–2"
+  },
+  {
+    "kickoff": "2026-06-27T21:00Z",
+    "round": "Matchday 17",
+    "home": "Croatia",
+    "away": "Ghana",
+    "venue": "Philadelphia",
+    "score": "2–1"
+  },
+  {
+    "kickoff": "2026-06-27T03:00Z",
+    "round": "Matchday 16",
+    "home": "Egypt",
+    "away": "Iran",
+    "venue": "Seattle",
+    "score": "1–1"
+  },
+  {
+    "kickoff": "2026-06-27T03:00Z",
+    "round": "Matchday 16",
+    "home": "New Zealand",
+    "away": "Belgium",
+    "venue": "Vancouver",
+    "score": "1–5"
+  },
+  {
+    "kickoff": "2026-06-27T00:00Z",
+    "round": "Matchday 16",
+    "home": "Cape Verde",
+    "away": "Saudi Arabia",
+    "venue": "Houston",
+    "score": "0–0"
+  },
+  {
+    "kickoff": "2026-06-27T00:00Z",
+    "round": "Matchday 16",
+    "home": "Uruguay",
+    "away": "Spain",
+    "venue": "Guadalajara (Zapopan)",
+    "score": "0–1"
+  },
+  {
+    "kickoff": "2026-06-26T19:00Z",
+    "round": "Matchday 16",
+    "home": "Norway",
+    "away": "France",
+    "venue": "Boston (Foxborough)",
+    "score": "1–4"
+  },
+  {
+    "kickoff": "2026-06-26T19:00Z",
+    "round": "Matchday 16",
+    "home": "Senegal",
+    "away": "Iraq",
+    "venue": "Toronto",
+    "score": "5–0"
+  },
+  {
+    "kickoff": "2026-06-26T02:00Z",
+    "round": "Matchday 15",
+    "home": "Turkey",
+    "away": "USA",
+    "venue": "Los Angeles (Inglewood)",
+    "score": "3–2"
+  },
+  {
+    "kickoff": "2026-06-26T02:00Z",
+    "round": "Matchday 15",
+    "home": "Paraguay",
+    "away": "Australia",
+    "venue": "San Francisco Bay Area (Santa Clara)",
+    "score": "0–0"
+  },
+  {
+    "kickoff": "2026-06-25T23:00Z",
+    "round": "Matchday 15",
+    "home": "Japan",
+    "away": "Sweden",
+    "venue": "Dallas (Arlington)",
+    "score": "1–1"
+  },
+  {
+    "kickoff": "2026-06-25T23:00Z",
+    "round": "Matchday 15",
+    "home": "Tunisia",
+    "away": "Netherlands",
+    "venue": "Kansas City",
+    "score": "1–3"
+  },
+  {
+    "kickoff": "2026-06-25T20:00Z",
+    "round": "Matchday 15",
+    "home": "Curaçao",
+    "away": "Ivory Coast",
+    "venue": "Philadelphia",
+    "score": "0–2"
+  },
+  {
+    "kickoff": "2026-06-25T20:00Z",
+    "round": "Matchday 15",
+    "home": "Ecuador",
+    "away": "Germany",
+    "venue": "New York/New Jersey (East Rutherford)",
+    "score": "2–1"
+  },
+  {
+    "kickoff": "2026-06-25T01:00Z",
+    "round": "Matchday 14",
+    "home": "Czech Republic",
+    "away": "Mexico",
+    "venue": "Mexico City",
+    "score": "0–3"
+  },
+  {
+    "kickoff": "2026-06-25T01:00Z",
+    "round": "Matchday 14",
+    "home": "South Africa",
+    "away": "South Korea",
+    "venue": "Monterrey (Guadalupe)",
+    "score": "1–0"
+  },
+  {
+    "kickoff": "2026-06-24T22:00Z",
+    "round": "Matchday 14",
+    "home": "Scotland",
+    "away": "Brazil",
+    "venue": "Miami (Miami Gardens)",
+    "score": "0–3"
+  },
+  {
+    "kickoff": "2026-06-24T22:00Z",
+    "round": "Matchday 14",
+    "home": "Morocco",
+    "away": "Haiti",
+    "venue": "Atlanta",
+    "score": "4–2"
+  },
+  {
+    "kickoff": "2026-06-24T19:00Z",
+    "round": "Matchday 14",
+    "home": "Switzerland",
+    "away": "Canada",
+    "venue": "Vancouver",
+    "score": "2–1"
+  },
+  {
+    "kickoff": "2026-06-24T19:00Z",
+    "round": "Matchday 14",
+    "home": "Bosnia & Herzegovina",
+    "away": "Qatar",
+    "venue": "Seattle",
+    "score": "3–1"
+  },
+  {
+    "kickoff": "2026-06-24T02:00Z",
+    "round": "Matchday 13",
+    "home": "Colombia",
+    "away": "DR Congo",
+    "venue": "Guadalajara (Zapopan)",
+    "score": "1–0"
+  },
+  {
+    "kickoff": "2026-06-23T23:00Z",
+    "round": "Matchday 13",
+    "home": "Panama",
+    "away": "Croatia",
+    "venue": "Toronto",
+    "score": "0–1"
+  },
+  {
+    "kickoff": "2026-06-23T20:00Z",
+    "round": "Matchday 13",
+    "home": "England",
+    "away": "Ghana",
+    "venue": "Boston (Foxborough)",
+    "score": "0–0"
+  },
+  {
+    "kickoff": "2026-06-23T17:00Z",
+    "round": "Matchday 13",
+    "home": "Portugal",
+    "away": "Uzbekistan",
+    "venue": "Houston",
+    "score": "5–0"
+  },
+  {
+    "kickoff": "2026-06-23T03:00Z",
+    "round": "Matchday 12",
+    "home": "Jordan",
+    "away": "Algeria",
+    "venue": "San Francisco Bay Area (Santa Clara)",
+    "score": "1–2"
+  },
+  {
+    "kickoff": "2026-06-23T00:00Z",
+    "round": "Matchday 12",
+    "home": "Norway",
+    "away": "Senegal",
+    "venue": "New York/New Jersey (East Rutherford)",
+    "score": "3–2"
+  },
+  {
+    "kickoff": "2026-06-22T21:00Z",
+    "round": "Matchday 12",
+    "home": "France",
+    "away": "Iraq",
+    "venue": "Philadelphia",
+    "score": "3–0"
+  },
+  {
+    "kickoff": "2026-06-22T17:00Z",
+    "round": "Matchday 12",
+    "home": "Argentina",
+    "away": "Austria",
+    "venue": "Dallas (Arlington)",
+    "score": "2–0"
+  },
+  {
+    "kickoff": "2026-06-22T01:00Z",
+    "round": "Matchday 11",
+    "home": "New Zealand",
+    "away": "Egypt",
+    "venue": "Vancouver",
+    "score": "1–3"
+  },
+  {
+    "kickoff": "2026-06-21T22:00Z",
+    "round": "Matchday 11",
+    "home": "Uruguay",
+    "away": "Cape Verde",
+    "venue": "Miami (Miami Gardens)",
+    "score": "2–2"
+  },
+  {
+    "kickoff": "2026-06-21T19:00Z",
+    "round": "Matchday 11",
+    "home": "Belgium",
+    "away": "Iran",
+    "venue": "Los Angeles (Inglewood)",
+    "score": "0–0"
+  },
+  {
+    "kickoff": "2026-06-21T16:00Z",
+    "round": "Matchday 11",
+    "home": "Spain",
+    "away": "Saudi Arabia",
+    "venue": "Atlanta",
+    "score": "4–0"
+  },
+  {
+    "kickoff": "2026-06-21T04:00Z",
+    "round": "Matchday 10",
+    "home": "Tunisia",
+    "away": "Japan",
+    "venue": "Monterrey (Guadalupe)",
+    "score": "0–4"
+  },
+  {
+    "kickoff": "2026-06-21T00:00Z",
+    "round": "Matchday 10",
+    "home": "Ecuador",
+    "away": "Curaçao",
+    "venue": "Kansas City",
+    "score": "0–0"
+  },
+  {
+    "kickoff": "2026-06-20T20:00Z",
+    "round": "Matchday 10",
+    "home": "Germany",
+    "away": "Ivory Coast",
+    "venue": "Toronto",
+    "score": "2–1"
+  },
+  {
+    "kickoff": "2026-06-20T17:00Z",
+    "round": "Matchday 10",
+    "home": "Netherlands",
+    "away": "Sweden",
+    "venue": "Houston",
+    "score": "5–1"
+  },
+  {
+    "kickoff": "2026-06-20T03:00Z",
+    "round": "Matchday 9",
+    "home": "Turkey",
+    "away": "Paraguay",
+    "venue": "San Francisco Bay Area (Santa Clara)",
+    "score": "0–1"
+  },
+  {
+    "kickoff": "2026-06-20T00:30Z",
+    "round": "Matchday 9",
+    "home": "Brazil",
+    "away": "Haiti",
+    "venue": "Philadelphia",
+    "score": "3–0"
+  },
+  {
+    "kickoff": "2026-06-19T22:00Z",
+    "round": "Matchday 9",
+    "home": "Scotland",
+    "away": "Morocco",
+    "venue": "Boston (Foxborough)",
+    "score": "0–1"
+  },
+  {
+    "kickoff": "2026-06-19T19:00Z",
+    "round": "Matchday 9",
+    "home": "USA",
+    "away": "Australia",
+    "venue": "Seattle",
+    "score": "2–0"
+  },
+  {
+    "kickoff": "2026-06-19T01:00Z",
+    "round": "Matchday 8",
+    "home": "Mexico",
+    "away": "South Korea",
+    "venue": "Guadalajara (Zapopan)",
+    "score": "1–0"
+  },
+  {
+    "kickoff": "2026-06-18T22:00Z",
+    "round": "Matchday 8",
+    "home": "Canada",
+    "away": "Qatar",
+    "venue": "Vancouver",
+    "score": "6–0"
+  },
+  {
+    "kickoff": "2026-06-18T19:00Z",
+    "round": "Matchday 8",
+    "home": "Switzerland",
+    "away": "Bosnia & Herzegovina",
+    "venue": "Los Angeles (Inglewood)",
+    "score": "4–1"
+  },
+  {
+    "kickoff": "2026-06-18T16:00Z",
+    "round": "Matchday 8",
+    "home": "Czech Republic",
+    "away": "South Africa",
+    "venue": "Atlanta",
+    "score": "1–1"
+  },
+  {
+    "kickoff": "2026-06-18T02:00Z",
+    "round": "Matchday 7",
+    "home": "Uzbekistan",
+    "away": "Colombia",
+    "venue": "Mexico City",
+    "score": "1–3"
+  },
+  {
+    "kickoff": "2026-06-17T23:00Z",
+    "round": "Matchday 7",
+    "home": "Ghana",
+    "away": "Panama",
+    "venue": "Toronto",
+    "score": "1–0"
+  },
+  {
+    "kickoff": "2026-06-17T20:00Z",
+    "round": "Matchday 7",
+    "home": "England",
+    "away": "Croatia",
+    "venue": "Dallas (Arlington)",
+    "score": "4–2"
+  },
+  {
+    "kickoff": "2026-06-17T17:00Z",
+    "round": "Matchday 7",
+    "home": "Portugal",
+    "away": "DR Congo",
+    "venue": "Houston",
+    "score": "1–1"
+  },
+  {
+    "kickoff": "2026-06-17T04:00Z",
+    "round": "Matchday 6",
+    "home": "Austria",
+    "away": "Jordan",
+    "venue": "San Francisco Bay Area (Santa Clara)",
+    "score": "3–1"
+  },
+  {
+    "kickoff": "2026-06-17T01:00Z",
+    "round": "Matchday 6",
+    "home": "Argentina",
+    "away": "Algeria",
+    "venue": "Kansas City",
+    "score": "3–0"
+  },
+  {
+    "kickoff": "2026-06-16T22:00Z",
+    "round": "Matchday 6",
+    "home": "Iraq",
+    "away": "Norway",
+    "venue": "Boston (Foxborough)",
+    "score": "1–4"
+  },
+  {
+    "kickoff": "2026-06-16T19:00Z",
+    "round": "Matchday 6",
+    "home": "France",
+    "away": "Senegal",
+    "venue": "New York/New Jersey (East Rutherford)",
+    "score": "3–1"
+  },
+  {
+    "kickoff": "2026-06-16T01:00Z",
+    "round": "Matchday 5",
+    "home": "Iran",
+    "away": "New Zealand",
+    "venue": "Los Angeles (Inglewood)",
+    "score": "2–2"
+  },
+  {
+    "kickoff": "2026-06-15T22:00Z",
+    "round": "Matchday 5",
+    "home": "Saudi Arabia",
+    "away": "Uruguay",
+    "venue": "Miami (Miami Gardens)",
+    "score": "1–1"
+  },
+  {
+    "kickoff": "2026-06-15T19:00Z",
+    "round": "Matchday 5",
+    "home": "Belgium",
+    "away": "Egypt",
+    "venue": "Seattle",
+    "score": "1–1"
+  },
+  {
+    "kickoff": "2026-06-15T16:00Z",
+    "round": "Matchday 5",
+    "home": "Spain",
+    "away": "Cape Verde",
+    "venue": "Atlanta",
+    "score": "0–0"
+  },
+  {
+    "kickoff": "2026-06-15T02:00Z",
+    "round": "Matchday 4",
+    "home": "Sweden",
+    "away": "Tunisia",
+    "venue": "Monterrey (Guadalupe)",
+    "score": "5–1"
+  },
+  {
+    "kickoff": "2026-06-14T23:00Z",
+    "round": "Matchday 4",
+    "home": "Ivory Coast",
+    "away": "Ecuador",
+    "venue": "Philadelphia",
+    "score": "1–0"
+  },
+  {
+    "kickoff": "2026-06-14T20:00Z",
+    "round": "Matchday 4",
+    "home": "Netherlands",
+    "away": "Japan",
+    "venue": "Dallas (Arlington)",
+    "score": "2–2"
+  },
+  {
+    "kickoff": "2026-06-14T17:00Z",
+    "round": "Matchday 4",
+    "home": "Germany",
+    "away": "Curaçao",
+    "venue": "Houston",
+    "score": "7–1"
+  },
+  {
+    "kickoff": "2026-06-14T04:00Z",
+    "round": "Matchday 3",
+    "home": "Australia",
+    "away": "Turkey",
+    "venue": "Vancouver",
+    "score": "2–0"
+  },
+  {
+    "kickoff": "2026-06-14T01:00Z",
+    "round": "Matchday 3",
+    "home": "Haiti",
+    "away": "Scotland",
+    "venue": "Boston (Foxborough)",
+    "score": "0–1"
+  },
+  {
+    "kickoff": "2026-06-13T22:00Z",
+    "round": "Matchday 3",
+    "home": "Brazil",
+    "away": "Morocco",
+    "venue": "New York/New Jersey (East Rutherford)",
+    "score": "1–1"
+  },
+  {
+    "kickoff": "2026-06-13T19:00Z",
+    "round": "Matchday 3",
+    "home": "Qatar",
+    "away": "Switzerland",
+    "venue": "San Francisco Bay Area (Santa Clara)",
+    "score": "1–1"
+  },
+  {
+    "kickoff": "2026-06-13T01:00Z",
+    "round": "Matchday 2",
+    "home": "USA",
+    "away": "Paraguay",
+    "venue": "Los Angeles (Inglewood)",
+    "score": "4–1"
+  },
+  {
+    "kickoff": "2026-06-12T19:00Z",
+    "round": "Matchday 2",
+    "home": "Canada",
+    "away": "Bosnia & Herzegovina",
+    "venue": "Toronto",
+    "score": "1–1"
+  },
+  {
+    "kickoff": "2026-06-12T02:00Z",
+    "round": "Matchday 1",
+    "home": "South Korea",
+    "away": "Czech Republic",
+    "venue": "Guadalajara (Zapopan)",
+    "score": "2–1"
+  },
+  {
+    "kickoff": "2026-06-11T19:00Z",
+    "round": "Matchday 1",
+    "home": "Mexico",
+    "away": "South Africa",
+    "venue": "Mexico City",
+    "score": "2–0"
+  }
+]

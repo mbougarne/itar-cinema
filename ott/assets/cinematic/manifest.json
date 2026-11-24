@@ -1,0 +1,156 @@
+{
+  "sceneCredit": "Original generated illustrations of fictional scenes for Itar Cinema.",
+  "portraitCredit": "Four generated fictional people; no real-person identities claimed.",
+  "icons": "Feather glyphs from react-native-vector-icons10.3.0, rasterized locally; MIT notices retained in icons/. No runtime font dependency.",
+  "processing": "Scenes resized to1280px/JPEG82; portraits512px/JPEG85 sequentially with sips. Posters use center crops. Static alpha scrim is a readability mask.",
+  "reference": "apps/probe/design/screens/",
+  "files": [
+    {
+      "file": "atlas.jpg",
+      "sha256": "f6d482352a7e6097cdcdf97ac1e0f6bc4e247d6698bdd99de38377afa66db530",
+      "width": 1280,
+      "height": 720,
+      "bytes": 325791
+    },
+    {
+      "file": "cast-aya.jpg",
+      "sha256": "56e7ab1c14af608a7a2e5244a117916e9c85f65b1bb383dc4980e96b99405052",
+      "width": 512,
+      "height": 512,
+      "bytes": 105789
+    },
+    {
+      "file": "cast-lina.jpg",
+      "sha256": "2fda2efa786457b9d5df3f1d888d7a2b6b9be60175862c03d049e074030e8e86",
+      "width": 512,
+      "height": 512,
+      "bytes": 106546
+    },
+    {
+      "file": "cast-noor.jpg",
+      "sha256": "5d204abc6a60771f852bbbf0afc1c6a31cecc8ba3198e073aa0866b10821fd21",
+      "width": 512,
+      "height": 512,
+      "bytes": 89511
+    },
+    {
+      "file": "cast-sami.jpg",
+      "sha256": "3a8fdec51f1cf0c615ad1994a4e66248702006aaea461aea31efefb819cfa231",
+      "width": 512,
+      "height": 512,
+      "bytes": 106818
+    },
+    {
+      "file": "glass.jpg",
+      "sha256": "56ba967072f28fb6ce55116625628a8cb364446eaa4d52829c4f46ef0d6e805b",
+      "width": 1280,
+      "height": 720,
+      "bytes": 450665
+    },
+    {
+      "file": "home.jpg",
+      "sha256": "c10e884fdf58cdbbb44e86daeeced69d6353e7a0b751075ed6604fc8eae3c5ef",
+      "width": 1280,
+      "height": 720,
+      "bytes": 349707
+    },
+    {
+      "file": "icons/arrow-left.png",
+      "sha256": "fe0d09cbc3c7c5288c1a022479d1474a05e2555441047e7eb415f78dadf6e03e",
+      "width": 96,
+      "height": 96,
+      "bytes": 746
+    },
+    {
+      "file": "icons/check.png",
+      "sha256": "f8e056ee603839448f6dc7675f189939a2af35a14bd2e4cb8bb0d9f8cfdbdb0e",
+      "width": 96,
+      "height": 96,
+      "bytes": 892
+    },
+    {
+      "file": "icons/film.png",
+      "sha256": "c6ad7f2ed1c267366d25d27a66ae27a88cb011af866b606aa2ea3f1a703c9f11",
+      "width": 96,
+      "height": 96,
+      "bytes": 1395
+    },
+    {
+      "file": "icons/home.png",
+      "sha256": "93df16e6599cf3e3b30de88d6f9750e9b9f0884e5ddef1d7c427bd07e77ea4ec",
+      "width": 96,
+      "height": 96,
+      "bytes": 1423
+    },
+    {
+      "file": "icons/monitor.png",
+      "sha256": "055c49e260a9df5bbb92eba2172f5046113795feeb72e29cc71f580e368c76aa",
+      "width": 96,
+      "height": 96,
+      "bytes": 1133
+    },
+    {
+      "file": "icons/search.png",
+      "sha256": "b7a31dc78f781ee052f6d8484b9ba81a409bd9fb7da553f21afe1576a020a7ae",
+      "width": 96,
+      "height": 96,
+      "bytes": 1793
+    },
+    {
+      "file": "icons/settings.png",
+      "sha256": "b0daa212889d9d56f48f7ffbb6abd1e6d81bd000fa894507978aaa12f0b82e70",
+      "width": 96,
+      "height": 96,
+      "bytes": 2856
+    },
+    {
+      "file": "icons/user.png",
+      "sha256": "33e639c10ca3f0528a99647af13304af1cc0c7927a18d3a25cbd5b300b263701",
+      "width": 96,
+      "height": 96,
+      "bytes": 1521
+    },
+    {
+      "file": "letters.jpg",
+      "sha256": "85db06f99f450829130f656b3ba1ed1f0451bc2f105b7506224c567532b54329",
+      "width": 1280,
+      "height": 720,
+      "bytes": 293552
+    },
+    {
+      "file": "lights.jpg",
+      "sha256": "41c483d186d8aaf813a17c3ba11a17b97b190923b564c4262c12bbcc68b0f446",
+      "width": 1280,
+      "height": 720,
+      "bytes": 349780
+    },
+    {
+      "file": "night.jpg",
+      "sha256": "fa8e6edd8b19eaa3b56acfbfcf5f4dfa0faa99a8cd188446b1d30bdf57779743",
+      "width": 1280,
+      "height": 720,
+      "bytes": 386146
+    },
+    {
+      "file": "scrim.png",
+      "sha256": "8ac1b352badce409672d95448f819882c5ab41085ea2ea81e611adc56a0c3e5f",
+      "width": 512,
+      "height": 128,
+      "bytes": 3597
+    },
+    {
+      "file": "signal.jpg",
+      "sha256": "d41ba9b2fefeea09fc10ab9d7734ecb3d66a1c4b8c2ae5cc72e7e17b5afd8306",
+      "width": 1280,
+      "height": 720,
+      "bytes": 367644
+    },
+    {
+      "file": "tide.jpg",
+      "sha256": "0582cc28a64f871688ae2efd6f700d8ffc51e14ee64a3ba48ef97c1dbea1d1b5",
+      "width": 1280,
+      "height": 720,
+      "bytes": 340934
+    }
+  ]
+}

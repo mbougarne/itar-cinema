@@ -1,0 +1,70 @@
+--- a/node_modules/react-native-video/android/src/main/java/com/brentvatne/exoplayer/ExoPlayerView.kt
++++ b/node_modules/react-native-video/android/src/main/java/com/brentvatne/exoplayer/ExoPlayerView.kt
+@@ -4,6 +4,8 @@
+ import android.graphics.Color
+ import android.graphics.drawable.GradientDrawable
+ import android.util.AttributeSet
++import android.view.SurfaceView
++import android.view.TextureView
+ import android.view.View
+ import android.view.View.MeasureSpec
+ import android.widget.FrameLayout
+@@ -16,6 +18,7 @@
+ import androidx.media3.ui.DefaultTimeBar
+ import androidx.media3.ui.PlayerView
+ import com.brentvatne.common.api.ResizeMode
++import com.brentvatne.common.api.ViewType
+ import com.brentvatne.common.api.SubtitleStyle
+
+ @UnstableApi
+@@ -23,6 +26,7 @@
+     FrameLayout(context, attrs, defStyleAttr) {
+
+     private var localStyle = SubtitleStyle()
++    private var inlineTexture: TextureView? = null
+     private var pendingResizeMode: Int? = null
+     private var hideLiveBadge = false
+     private val liveBadge: TextView = TextView(context).apply {
+@@ -71,7 +75,14 @@
+             currentPlayer.removeListener(playerListener)
+         }
+
++        if (currentPlayer !== player) {
++            inlineTexture?.let { currentPlayer?.clearVideoTextureView(it) }
++        }
+         playerView.player = player
++        if (currentPlayer !== player) {
++            // PlayerView binds its built-in surface when it receives a player.
++            inlineTexture?.let { player?.setVideoTextureView(it) }
++        }
+
+         if (player != null) {
+             player.addListener(playerListener)
+@@ -141,7 +152,26 @@
+     }
+
+     fun updateSurfaceView(viewType: Int) {
+-        // TODO: Implement proper surface type switching if needed
++        val useTexture = viewType == ViewType.VIEW_TYPE_TEXTURE
++        if (useTexture == (inlineTexture != null)) return
++        val surface = playerView.videoSurfaceView as? SurfaceView ?: return
++        val frame = surface.parent as? FrameLayout ?: return
++        val player = playerView.player
++        if (useTexture) {
++            // The scrolling card requires a surface that participates in UI composition.
++            val texture = TextureView(context)
++            frame.addView(texture, 0, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT))
++            inlineTexture = texture
++            surface.visibility = View.GONE
++            player?.setVideoTextureView(texture)
++        } else {
++            val texture = inlineTexture ?: return
++            player?.clearVideoTextureView(texture)
++            frame.removeView(texture)
++            inlineTexture = null
++            surface.visibility = View.VISIBLE
++            player?.setVideoSurfaceView(surface)
++        }
+     }
+
+     val isPlaying: Boolean

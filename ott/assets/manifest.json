@@ -1,0 +1,102 @@
+{
+  "credit": "Original procedural fixture illustrations authored for Itar Cinema. Reused motifs are intentional; all titles and people are fictional.",
+  "generator": "scripts/generate-ott-art.py",
+  "files": [
+    {
+      "file": "0-landscape.png",
+      "sha256": "f32722ef434f4670632c23d4a355667466c76e7ee26f64e8684dd151ca876230",
+      "width": 480,
+      "height": 270
+    },
+    {
+      "file": "0-poster.png",
+      "sha256": "0d4957be11cf89ca1629c1eb9ff9710666de1ff7b0829e7e66006533714bbf7f",
+      "width": 240,
+      "height": 360
+    },
+    {
+      "file": "1-landscape.png",
+      "sha256": "64face1eb19990fba22f72651a406124aab64aa0df0c0842c5a7551eca26f4c6",
+      "width": 480,
+      "height": 270
+    },
+    {
+      "file": "1-poster.png",
+      "sha256": "076466fed92f7c002bf9bf9efd849e7b754581972ee07d6bc0a4259eeb7adfcc",
+      "width": 240,
+      "height": 360
+    },
+    {
+      "file": "2-landscape.png",
+      "sha256": "569cd903524845525c12b4029b1137179fbca42a783e9588fb024968ad904515",
+      "width": 480,
+      "height": 270
+    },
+    {
+      "file": "2-poster.png",
+      "sha256": "3d42cb4ae3c40e010db2bf80eff4a2485b641c8972e532252121b610b8b243ca",
+      "width": 240,
+      "height": 360
+    },
+    {
+      "file": "3-landscape.png",
+      "sha256": "236f34483398895a28c1578023efd864b9e357a8796929eba7fb9a7ac21c84c6",
+      "width": 480,
+      "height": 270
+    },
+    {
+      "file": "3-poster.png",
+      "sha256": "695f6f94f075056c54b2b31c101e36ee38e4122a5d654d7ffc61c9738eba7e8d",
+      "width": 240,
+      "height": 360
+    },
+    {
+      "file": "4-landscape.png",
+      "sha256": "2ee0417f1eeb11d4fd8fd988aee2fc9ec01adb488e683ff310b21bc94eefeda1",
+      "width": 480,
+      "height": 270
+    },
+    {
+      "file": "4-poster.png",
+      "sha256": "df0169607813ca9d0c44671a2dfade590a1d6d422537794e261e7a4140986f15",
+      "width": 240,
+      "height": 360
+    },
+    {
+      "file": "5-landscape.png",
+      "sha256": "d0c3d8ed010baa47aa6752c2b340ec0a63a5b7963654b2552b871958b89467f4",
+      "width": 480,
+      "height": 270
+    },
+    {
+      "file": "5-poster.png",
+      "sha256": "b95d88751bbb0d9ccccebc32422c5872b7ecc39fc871ce224eddc0da540aecdf",
+      "width": 240,
+      "height": 360
+    },
+    {
+      "file": "6-landscape.png",
+      "sha256": "e10a81534364c0c733a9f39ef0b301e3ab096418f874e6ca520e48567938828d",
+      "width": 480,
+      "height": 270
+    },
+    {
+      "file": "6-poster.png",
+      "sha256": "cf6009ecfbd9bf10fada10025d955504647308e33f1e35a82c9b49c17c7e21b8",
+      "width": 240,
+      "height": 360
+    },
+    {
+      "file": "7-landscape.png",
+      "sha256": "c0f305b7ee22a9e823534ce14a44644c55be5eea5e69533fd18c88dbb6ebf6cf",
+      "width": 480,
+      "height": 270
+    },
+    {
+      "file": "7-poster.png",
+      "sha256": "aab4519ae8f41aed09fcaff6cbb72e8b1a40e6be4c8a28235a0e018d5b050fed",
+      "width": 240,
+      "height": 360
+    }
+  ]
+}
