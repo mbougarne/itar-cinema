@@ -29,7 +29,10 @@ import type {
 import { captionAccessible } from './tv-accessibility';
 import { cast, films } from './catalog';
 import type { CastMember, Film } from './catalog-types';
-import { useBrowserPointerDown } from './browser-navigation';
+import {
+  useBrowserFocusRoute,
+  useBrowserPointerDown,
+} from './browser-navigation';
 import { Action } from './components/Action';
 import { IconAction } from './components/IconAction';
 import { Backdrop } from './components/Backdrop';
@@ -93,6 +96,8 @@ export default function Details({
   const [heroHeight, setHeroHeight] = useState(0);
   const [tabsHeight, setTabsHeight] = useState(0);
   const [episodeFocused, setEpisodeFocused] = useState(false);
+  const [selectedSeason, setSelectedSeason] = useState<number>();
+  const [focusedSeason, setFocusedSeason] = useState<number>();
   const visibleOffset = useRef<number>(0);
   const focusedKey = focus.occurrenceKey;
 
@@ -193,10 +198,16 @@ export default function Details({
   const captionHeight = 48 * u;
   const cardHeight = imageHeight + captionHeight;
 
-  const onHero =
-    focusedKey === occurrenceKey('details', 'play') ||
-    focusedKey === occurrenceKey('details', 'list') ||
-    focusedKey === occurrenceKey('details', 'like');
+  const heroActions = ['play', 'list', 'like'].map(name =>
+    occurrenceKey('details', name),
+  );
+
+  const onHero = !!focusedKey && heroActions.includes(focusedKey);
+
+  const tabKey = occurrenceKey('details', 'tab', tab);
+
+  const reviewKeys =
+    occurrenceKey('details', film.id, 'review').slice(0, -1) + ',';
 
   const episodeReveal = tab === 'Episodes' && !focusedTab && episodeFocused;
 
@@ -336,6 +347,21 @@ export default function Details({
     highContrast,
     u,
   ]);
+
+  useBrowserFocusRoute(active, (key, direction) => {
+    if (direction === 'ArrowDown' && heroActions.includes(key)) return tabKey;
+
+    if (
+      direction === 'ArrowUp' &&
+      (key.startsWith(reviewKeys) ||
+        key === occurrenceKey('details', 'retry-reviews') ||
+        key === occurrenceKey('details', 'retry') ||
+        model.rails.some(rail =>
+          rail.items.some(item => item.occurrenceKey === key),
+        ))
+    )
+      return tabKey;
+  });
 
   const renderItem = useCallback(
     (item: VirtualizedFocusItem) => {
@@ -562,6 +588,8 @@ export default function Details({
             id="detail-tabs"
             layout="row"
             boundary="parent"
+            restoreOnEntry
+            preferredKey={tabKey}
             style={[s.tabs, s.seriesTabs]}
           >
             {availableTabs.map((name, index) => (
@@ -668,6 +696,10 @@ export default function Details({
               <Episodes
                 film={film}
                 seasons={seasons}
+                selectedSeason={selectedSeason}
+                focusedSeason={focusedSeason}
+                onSelectSeason={setSelectedSeason}
+                onFocusSeason={setFocusedSeason}
                 width={viewport.width}
                 height={episodeViewportHeight}
                 active={active}

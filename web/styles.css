@@ -91,7 +91,8 @@ video:focus {
 .itar-player-live-track { height: 5px; border-radius: 4px; background: #b62c49; margin-bottom: 8px; }
 .itar-player-live-drawer {
   position: absolute;
-  inset: 0 0 0 auto;
+  inset-block: 0;
+  inset-inline-end: 0;
   width: min(38vw, 680px);
   box-sizing: border-box;
   display: flex;
@@ -102,7 +103,7 @@ video:focus {
 }
 .itar-player-drawer-heading { display: flex; align-items: center; justify-content: space-between; gap: 14px; }
 .itar-player-drawer-heading h2 { margin: 0; }
-.itar-player-channel-list { overflow-y: auto; padding: 4px; scrollbar-width: none; }
+.itar-player-channel-list { min-height: 0; overflow-y: auto; padding: 4px; scroll-padding: 4px; scrollbar-width: none; }
 .itar-player-channel-list::-webkit-scrollbar { display: none; }
 .itar-web-player .itar-player-channel-list button,
 .itar-web-player .itar-player-channel-list button:focus-visible {
@@ -114,6 +115,15 @@ video:focus {
   border-color: transparent;
   background: transparent;
   text-align: start;
+}
+.itar-web-player .itar-player-channel-list button[aria-current="true"] {
+  opacity: 1;
+  border-color: var(--player-accent);
+  color: #e9f3ff;
+  cursor: default;
+}
+.itar-web-player .itar-player-channel-list button[aria-current="true"] small:last-child {
+  color: var(--player-accent);
 }
 .itar-player-channel-list .itar-player-card-art { flex: 0 0 37%; }
 .itar-player-channel-copy { min-width: 0; display: grid; gap: 5px; }

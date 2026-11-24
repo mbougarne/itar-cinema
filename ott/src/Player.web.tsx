@@ -29,6 +29,14 @@ const legacyKeys: Record<number, string> = {
   40: 'ArrowDown',
 };
 
+const playerRows = [
+  'header',
+  'progress',
+  'next',
+  'transport',
+  'related',
+] as const;
+
 const suggestionArtwork = {
   width: '100%',
   height: '100%',
@@ -381,12 +389,22 @@ export default function Player({
       return;
     }
 
-    let next = index;
+    let next: HTMLElement | undefined;
 
     if (key === 'Tab') {
       next =
-        (index + (event.shiftKey ? -1 : 1) + controls.length) % controls.length;
-    } else if (directionalNavigationEnabled && key.startsWith('Arrow')) {
+        controls[
+          (index + (event.shiftKey ? -1 : 1) + controls.length) %
+            controls.length
+        ];
+    } else if (
+      directionalNavigationEnabled &&
+      ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(key) &&
+      !event.altKey &&
+      !event.ctrlKey &&
+      !event.metaKey &&
+      !event.shiftKey
+    ) {
       // Range controls keep native Left/Right adjustment and reader semantics.
       if (
         target.tagName === 'INPUT' &&
@@ -400,32 +418,48 @@ export default function Player({
       if (!row) return;
 
       if (key === 'ArrowUp' || key === 'ArrowDown') {
-        const rows = Array.from(
-          event.currentTarget.querySelectorAll('[data-player-row]'),
-        );
-
-        const adjacent = rows[rows.indexOf(row) + (key === 'ArrowUp' ? -1 : 1)];
+        const step = key === 'ArrowUp' ? -1 : 1;
 
         if (showChannels) {
-          const siblings = controls.filter(control => row.contains(control));
-          const step = key === 'ArrowUp' ? -1 : 1;
-          const sibling = siblings[siblings.indexOf(target) + step];
+          next = controls[index + step];
+        } else {
+          const rowName = row.getAttribute('data-player-row');
+          const rowIndex = playerRows.findIndex(name => name === rowName);
 
-          if (sibling) next = controls.indexOf(sibling);
+          if (rowIndex < 0) return;
+
+          // Up from the transport goes straight to the timeline. Down from
+          // the timeline lets the remote reach the optional Play Next card.
+          const adjacent =
+            step > 0
+              ? playerRows.slice(rowIndex + 1)
+              : rowName === 'transport'
+              ? ['progress', 'next', 'header']
+              : playerRows.slice(0, rowIndex).reverse();
+
+          const bands = Array.from(
+            event.currentTarget.querySelectorAll('[data-player-row]'),
+          );
+
+          for (const name of adjacent) {
+            const band = bands.find(
+              candidate => candidate.getAttribute('data-player-row') === name,
+            );
+
+            next =
+              band?.querySelector<HTMLElement>(
+                '[data-player-entry]:not(:disabled)',
+              ) ?? controls.find(control => band?.contains(control));
+
+            if (next) break;
+          }
         }
-
-        const entry = adjacent?.querySelector<HTMLElement>(
-          '[data-player-entry]:not(:disabled)',
-        );
-
-        if (!showChannels && entry) next = controls.indexOf(entry);
-      } else {
+      } else if (!showChannels) {
         const siblings = controls.filter(control => row.contains(control));
         const rowRtl = getComputedStyle(row).direction === 'rtl';
         const step = (key === 'ArrowRight') !== rowRtl ? 1 : -1;
-        const sibling = siblings[siblings.indexOf(target) + step];
 
-        if (sibling) next = controls.indexOf(sibling);
+        next = siblings[siblings.indexOf(target) + step];
       }
     } else {
       return;
@@ -434,21 +468,7 @@ export default function Player({
     event.preventDefault();
     event.stopPropagation();
 
-    const control = controls[next];
-
-    control?.focus({ preventScroll: true });
-
-    const rail = suggestionRail.current;
-
-    if (control && rail?.contains(control)) {
-      const tile = control.getBoundingClientRect();
-      const window = rail.getBoundingClientRect();
-
-      if (tile.left < window.left) rail.scrollLeft -= window.left - tile.left;
-
-      if (tile.right > window.right)
-        rail.scrollLeft += tile.right - window.right;
-    }
+    next?.focus({ preventScroll: true });
   };
 
   return createPortal(
@@ -483,6 +503,13 @@ export default function Player({
 
         if (control) {
           lastControl.current = control;
+
+          if (
+            control.closest('.itar-player-channel-list') ||
+            suggestionRail.current?.contains(control)
+          ) {
+            control.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+          }
 
           if (!wakeKey.current) wake();
         }
@@ -573,7 +600,7 @@ export default function Player({
         </div>
       )}
       {visible && <div className="itar-player-scrim" aria-hidden="true" />}
-      <header className="itar-player-header" data-player-row>
+      <header className="itar-player-header" data-player-row="header">
         <button
           className="itar-player-close"
           aria-label={t('Close player')}
@@ -598,6 +625,7 @@ export default function Player({
           {!!channels?.length && (
             <button
               ref={channelButton}
+              data-player-entry
               aria-expanded={showChannels}
               aria-controls="live-channels-drawer"
               onClick={() => setChannelDrawer(true)}
@@ -634,7 +662,7 @@ export default function Player({
           />
         </div>
       </header>
-      <div className="itar-player-transport" data-player-row>
+      <div className="itar-player-transport" data-player-row="transport">
         {!asset.live && (
           <button
             aria-label={t('Rewind 10 seconds')}
@@ -689,9 +717,8 @@ export default function Player({
               <button
                 key={channel.key}
                 aria-current={channel.current || undefined}
-                onClick={
-                  channel.current ? () => setChannelDrawer(false) : channel.play
-                }
+                disabled={channel.current}
+                onClick={channel.current ? undefined : channel.play}
               >
                 <span className="itar-player-card-art">
                   <Picture
@@ -717,7 +744,7 @@ export default function Player({
       )}
       <div className="itar-player-controls">
         {nextChoice && (
-          <div className="itar-player-next-row" data-player-row>
+          <div className="itar-player-next-row" data-player-row="next">
             <button
               data-player-entry
               className="itar-player-next"
@@ -761,7 +788,7 @@ export default function Player({
           <div className="itar-player-live-track" aria-hidden="true" />
         )}
         {!asset.live && (
-          <div className="itar-player-timeline-row" data-player-row>
+          <div className="itar-player-timeline-row" data-player-row="progress">
             <input
               data-player-entry
               type="range"
@@ -788,7 +815,7 @@ export default function Player({
         <div
           ref={suggestionRail}
           className="itar-player-suggestion-rail"
-          data-player-row
+          data-player-row="related"
           role="group"
           aria-label={t(
             choices?.episodes.length ? 'Season episodes' : 'Related titles',

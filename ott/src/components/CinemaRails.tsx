@@ -1,11 +1,14 @@
 import React, { useEffect, useLayoutEffect, useMemo, useRef } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { Platform, ScrollView, StyleSheet, View } from 'react-native';
 import {
+  Focusable,
   FocusScope,
   FocusVirtualizedRails as PackageRails,
+  occurrenceKey,
   useFocusState,
   type VirtualizedFocusRail as PackageRail,
 } from '@bougarnem/itar/react';
+import { useBrowserFocusRoute } from '../browser-navigation';
 
 export type VirtualizedFocusRail = PackageRail & {
   horizontalAlignment?: 'nearest' | 'leading' | 'pinned';
@@ -15,6 +18,7 @@ export type VirtualizedFocusRail = PackageRail & {
   headerExtent?: number;
   revealGroup?: string;
   leadingExtent?: number;
+  contentInsetStart?: number;
 };
 
 type Props = Omit<
@@ -24,13 +28,16 @@ type Props = Omit<
   rails: readonly VirtualizedFocusRail[];
   renderRailHeader?: (rail: VirtualizedFocusRail) => React.ReactNode;
   revealFullRow?: boolean;
+  rtl?: boolean;
+  headerReturnKey?: string;
+  headerExitKeys?: readonly string[];
 };
 
 // Cinema's custom shelves have different heights and may render their own
 // controls. Compose one public Itar rail per shelf with the app's scroll view.
-export function CinemaRails({ revealFullRow, ...props }: Props) {
+export function CinemaRails({ revealFullRow, rtl, ...props }: Props) {
   return revealFullRow ? (
-    <MeasuredRails {...props} />
+    <MeasuredRails {...props} rtl={rtl} />
   ) : (
     <PackageRails {...props} />
   );
@@ -38,11 +45,14 @@ export function CinemaRails({ revealFullRow, ...props }: Props) {
 
 function MeasuredRails({
   id,
+  rtl,
   active = true,
   rails,
   listHeader,
   listHeaderExtent = 0,
   listHeaderItems,
+  headerReturnKey,
+  headerExitKeys,
   rowExtent,
   headerExtent = 0,
   viewportExtent,
@@ -56,10 +66,12 @@ function MeasuredRails({
   onReady,
   style,
 }: Omit<Props, 'revealFullRow'>) {
+  const rtlWeb = !!rtl && Platform.OS === 'web';
   const scroll = useRef<ScrollView>(null);
   const scrollOffset = useRef(0);
   const focus = useFocusState();
   const lastRow = useRef<string | undefined>(undefined);
+  const rowFocus = useRef(new Map<string, string>());
 
   const rows = useMemo(() => {
     let top = listHeaderExtent;
@@ -73,6 +85,58 @@ function MeasuredRails({
       return row;
     });
   }, [rails, listHeaderExtent, rowExtent]);
+
+  useBrowserFocusRoute(
+    active && !!listHeaderItems?.length,
+    (key, direction) => {
+      const horizontal =
+        direction === 'ArrowLeft' || direction === 'ArrowRight';
+
+      if (horizontal && !rtlWeb) return;
+
+      const focusableRows = rails.filter(rail =>
+        rail.items.some(item => item.enabled !== false),
+      );
+
+      const rowIndex = focusableRows.findIndex(rail =>
+        rail.items.some(item => item.occurrenceKey === key),
+      );
+
+      if (horizontal) {
+        const items = focusableRows[rowIndex]?.items.filter(
+          item => item.enabled !== false,
+        );
+
+        if (!items) return;
+
+        const index = items.findIndex(item => item.occurrenceKey === key);
+        const next = items[index + (direction === 'ArrowLeft' ? 1 : -1)];
+
+        return (
+          next?.occurrenceKey ??
+          (direction === 'ArrowRight' ? occurrenceKey('nav', 'Home') : false)
+        );
+      }
+
+      const atHeader = headerExitKeys
+        ? headerExitKeys.includes(key)
+        : listHeaderItems?.some(item => item.occurrenceKey === key);
+
+      if (rowIndex < 0 && (!atHeader || direction !== 'ArrowDown')) return;
+
+      const next = focusableRows[rowIndex + (direction === 'ArrowUp' ? -1 : 1)];
+
+      if (!next) return direction === 'ArrowUp' ? headerReturnKey : undefined;
+
+      const remembered = rowFocus.current.get(next.id);
+      const enabled = next.items.filter(item => item.enabled !== false);
+
+      return (
+        enabled.find(item => item.occurrenceKey === remembered)
+          ?.occurrenceKey ?? enabled[0]?.occurrenceKey
+      );
+    },
+  );
 
   useEffect(() => {
     if (active && viewportExtent > 0 && viewportHeight > 0) onReady?.();
@@ -101,6 +165,8 @@ function MeasuredRails({
 
       return;
     }
+
+    rowFocus.current.set(row.rail.id, focus.occurrenceKey);
 
     if (lastRow.current === row.rail.id) return;
 
@@ -144,20 +210,39 @@ function MeasuredRails({
           scrollOffset.current = event.nativeEvent.contentOffset.y;
         }}
       >
-        {listHeader}
-        {rows.map(({ rail, height }) => {
+        {listHeader && (
+          <FocusScope
+            id="00-header"
+            boundary="parent"
+            restoreOnEntry
+            preferredKey={headerReturnKey}
+          >
+            {listHeader}
+          </FocusScope>
+        )}
+        {rows.map(({ rail, height }, index) => {
           const leading = rail.leadingExtent ?? 0;
+          const inset = rail.contentInsetStart ?? 0;
           const heading = leading ? 0 : rail.headerExtent ?? headerExtent;
           const header = renderRailHeader?.(rail);
           const contentHeight = Math.max(1, height - heading);
+          const rowWidth = viewportExtent - leading - inset;
+          const cellWidth = rail.itemExtent ?? itemExtent;
+          const alignment = rail.horizontalAlignment ?? horizontalAlignment;
 
           const items = rail.interactiveHeader
             ? rail.items.slice(0, -1)
             : rail.items;
 
           return (
-            <View
+            <FocusScope
               key={rail.id}
+              id={String(index + 1).padStart(3, '0') + '-' + rail.id}
+              boundary="parent"
+              restoreOnEntry={!!listHeaderItems?.length}
+              preferredKey={
+                rail.items.find(item => item.enabled !== false)?.occurrenceKey
+              }
               style={[{ height }, leading > 0 && styles.leadingRow]}
             >
               {header != null && (
@@ -175,9 +260,40 @@ function MeasuredRails({
                 <FocusScope id={rail.id} layout="row" boundary="parent">
                   {rail.renderBody()}
                 </FocusScope>
+              ) : items.length > 0 && rtlWeb && alignment === 'nearest' ? (
+                // The published rail's nearest alignment lays cells out from
+                // the left. These short shelves use regular RTL flow instead.
+                <ScrollView
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                  style={{
+                    marginStart: inset,
+                    width: rowWidth,
+                    height: contentHeight,
+                  }}
+                >
+                  {items.map((item, itemIndex) => (
+                    <View key={item.occurrenceKey} style={{ width: cellWidth }}>
+                      {renderDecoration?.(item)}
+                      <Focusable
+                        {...item}
+                        order={itemIndex}
+                        style={[
+                          { width: cellWidth, height: contentHeight },
+                          rail.itemStyle,
+                        ]}
+                      >
+                        {renderItem
+                          ? renderItem(item, itemIndex)
+                          : item.children}
+                      </Focusable>
+                    </View>
+                  ))}
+                </ScrollView>
               ) : items.length > 0 ? (
                 <PackageRails
                   id={rail.id}
+                  style={inset ? { marginStart: inset } : undefined}
                   active={active}
                   rails={[
                     {
@@ -187,20 +303,18 @@ function MeasuredRails({
                       overlayTarget: rail.overlayTarget,
                     },
                   ]}
-                  itemExtent={rail.itemExtent ?? itemExtent}
+                  itemExtent={cellWidth}
                   rowExtent={contentHeight}
-                  viewportExtent={viewportExtent - leading}
+                  viewportExtent={rowWidth}
                   viewportHeight={contentHeight}
                   viewportRows={1}
                   rowEntry={rowEntry}
-                  horizontalAlignment={
-                    rail.horizontalAlignment ?? horizontalAlignment
-                  }
+                  horizontalAlignment={alignment}
                   renderDecoration={renderDecoration}
                   renderItem={renderItem}
                 />
               ) : null}
-            </View>
+            </FocusScope>
           );
         })}
       </ScrollView>

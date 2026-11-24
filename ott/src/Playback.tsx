@@ -23,6 +23,7 @@ import type { VideoRef } from 'react-native-video';
 import {
   Focusable,
   FocusScope,
+  FocusVirtualizedList,
   occurrenceKey,
   useFocusCommands,
   useFocusReady,
@@ -88,6 +89,7 @@ export default function Playback({
   const [paused, setPaused] = useState(false);
   const focus = useFocusState();
   const [showChannels, setShowChannels] = useState(false);
+  const [drawerViewport, setDrawerViewport] = useState({ width: 0, height: 0 });
   const showingChannels = useRef(false);
   const restoreChannelButton = useRef(false);
 
@@ -96,6 +98,25 @@ export default function Playback({
     showingChannels.current = value;
     setShowChannels(value);
   };
+
+  const liveItems = useMemo(
+    () =>
+      channels?.map(channel => ({
+        occurrenceKey: occurrenceKey('player', 'channel', channel.key),
+        accessibilityLabel: [
+          channel.title,
+          channel.note && t(channel.note),
+          t(channel.current ? 'Watching now' : 'Live now'),
+        ]
+          .filter(Boolean)
+          .join(' · '),
+        displayLabel: '',
+        enabled: !channel.current,
+        focusStyle: { accentColor: colors.actionRing },
+        onPress: channel.current ? undefined : channel.play,
+      })),
+    [channels, colors.actionRing, t],
+  );
 
   const cards = choices?.episodes.length ? choices.episodes : choices?.related;
 
@@ -381,51 +402,73 @@ export default function Playback({
           <Text style={s.heading} accessibilityRole="header">
             {t('Live channels')}
           </Text>
-          <Action
-            label="Close channels"
-            id={occurrenceKey('player', 'close-channels')}
-            quiet
-            onPress={() => setChannelDrawer(false)}
-          />
-          <ScrollView style={s.fill} showsVerticalScrollIndicator={false}>
-            {channels?.map((channel, index) => (
-              <Action
-                key={channel.key}
-                order={index + 1}
-                id={occurrenceKey('player', 'channel', channel.key)}
-                label={channel.title}
-                tvDescription={channel.current ? 'Watching now' : channel.note}
-                quiet
-                style={s.livePlayerChannel}
-                onPress={
-                  channel.current ? () => setChannelDrawer(false) : channel.play
-                }
-              >
-                <View style={s.livePlayerChannelCopy}>
-                  <Picture
-                    source={channel.artwork}
-                    style={s.livePlayerChannelImage}
-                    fallback=""
-                  />
-                  <View style={s.fill}>
-                    <Text style={s.muted}>
-                      {index + 1} · {channel.note}
-                    </Text>
-                    <Text numberOfLines={1} style={s.body}>
-                      {channel.title}
-                    </Text>
-                    <Text style={s.muted}>
-                      {channel.current ? 'Watching now' : 'Live now'}
-                    </Text>
-                  </View>
-                </View>
-              </Action>
-            ))}
-          </ScrollView>
+          <FocusScope id="01-heading" boundary="parent">
+            <Action
+              label="Close channels"
+              id={occurrenceKey('player', 'close-channels')}
+              quiet
+              onPress={() => setChannelDrawer(false)}
+            />
+          </FocusScope>
+          <View
+            style={s.fill}
+            onLayout={event => {
+              const { width, height } = event.nativeEvent.layout;
+
+              if (width > 0 && height > 0) setDrawerViewport({ width, height });
+            }}
+          >
+            {!!liveItems?.length && drawerViewport.height > 0 && (
+              <FocusVirtualizedList
+                id="02-channels"
+                horizontal={false}
+                data={liveItems}
+                itemExtent={144 * u}
+                itemStyle={s.livePlayerChannel}
+                viewportExtent={drawerViewport.height}
+                crossExtent={drawerViewport.width}
+                renderItem={(_, index) => {
+                  const channel = channels?.[index];
+
+                  if (!channel) return null;
+
+                  return (
+                    <View
+                      style={[
+                        s.livePlayerChannelCopy,
+                        channel.current && { borderColor: colors.accent },
+                      ]}
+                    >
+                      <Picture
+                        source={channel.artwork}
+                        style={s.livePlayerChannelImage}
+                        fallback=""
+                      />
+                      <View style={s.fill}>
+                        <Text style={s.muted}>
+                          {index + 1} · {channel.note && t(channel.note)}
+                        </Text>
+                        <Text numberOfLines={1} style={s.body}>
+                          {channel.title}
+                        </Text>
+                        <Text
+                          style={[
+                            s.muted,
+                            channel.current && { color: colors.accent },
+                          ]}
+                        >
+                          {t(channel.current ? 'Watching now' : 'Live now')}
+                        </Text>
+                      </View>
+                    </View>
+                  );
+                }}
+              />
+            )}
+          </View>
         </FocusScope>
       ) : visible ? (
-        // Static scopes share the default order. Their keys order the header
-        // before transport within this column, with the timeline ordered last.
+        // The bands are siblings in Itar's column, in vertical navigation order.
         <FocusScope
           id="playback"
           layout="column"
@@ -453,7 +496,7 @@ export default function Playback({
               </Text>
             </View>
             <FocusScope
-              id="header-actions"
+              id="01-header-actions"
               layout="row"
               boundary="parent"
               style={s.playerControls}
@@ -517,7 +560,7 @@ export default function Playback({
           </ControlBand>
           <ControlBand {...bandProps} style={s.playerTransport}>
             <FocusScope
-              id="transport"
+              id="02-transport"
               layout="row"
               boundary="parent"
               style={s.playerControls}
@@ -565,42 +608,44 @@ export default function Playback({
             style={[s.playerChrome, !!cards?.length && { bottom: stripHeight }]}
           >
             {nextChoice && (
-              <Action
-                id={occurrenceKey('player', 'next')}
-                label={`${t(nextLabel)} · ${t(nextChoice.title)}`}
-                displayLabel=""
-                style={s.playerNext}
-                onPress={nextChoice.play}
-              >
-                <View>
-                  <Picture
-                    source={nextChoice.artwork}
-                    fallback=""
-                    style={{
-                      width: 96 * u,
-                      height: 54 * u,
-                      borderRadius: 5 * u,
-                    }}
-                  />
-                  <Image
-                    accessible={false}
-                    source={icons.forward}
-                    style={s.playerNextIcon}
-                  />
-                </View>
-                <View style={s.fill}>
-                  <Text accessible={false} style={s.footer}>
-                    {t(nextLabel)}
-                  </Text>
-                  <Text
-                    accessible={false}
-                    numberOfLines={1}
-                    style={s.detailCardCaption}
-                  >
-                    {t(nextChoice.title)}
-                  </Text>
-                </View>
-              </Action>
+              <FocusScope id="03-play-next" layout="row" boundary="parent">
+                <Action
+                  id={occurrenceKey('player', 'next')}
+                  label={`${t(nextLabel)} · ${t(nextChoice.title)}`}
+                  displayLabel=""
+                  style={s.playerNext}
+                  onPress={nextChoice.play}
+                >
+                  <View>
+                    <Picture
+                      source={nextChoice.artwork}
+                      fallback=""
+                      style={{
+                        width: 96 * u,
+                        height: 54 * u,
+                        borderRadius: 5 * u,
+                      }}
+                    />
+                    <Image
+                      accessible={false}
+                      source={icons.forward}
+                      style={s.playerNextIcon}
+                    />
+                  </View>
+                  <View style={s.fill}>
+                    <Text accessible={false} style={s.footer}>
+                      {t(nextLabel)}
+                    </Text>
+                    <Text
+                      accessible={false}
+                      numberOfLines={1}
+                      style={s.detailCardCaption}
+                    >
+                      {t(nextChoice.title)}
+                    </Text>
+                  </View>
+                </Action>
+              </FocusScope>
             )}
             <View style={s.playerMeta}>
               <Text accessible={captionAccessible} style={s.muted}>
@@ -633,52 +678,54 @@ export default function Playback({
             )}
             {media.live && <View style={s.livePlayerTrack} />}
             {!media.live && (
-              <Focusable
-                occurrenceKey={occurrenceKey('player', 'timeline')}
-                order={1}
-                displayLabel=""
-                enabled={loaded}
-                accessibilityLabel={t(
-                  'Timeline, {elapsed} of {duration}. Left or right seeks 10 seconds. Select plays or pauses.',
-                  {
-                    elapsed: formatPlaybackTime(time),
-                    duration: formatPlaybackTime(duration),
-                  },
-                )}
-                onAdjust={delta => seek(delta * 10)}
-                onPress={togglePlayback}
-                focusStyle={timelineFocusStyle}
-                style={s.timelineAction}
-              >
-                <View style={s.timelineInset}>
-                  <View style={s.playerTrack}>
-                    <View
-                      style={[
-                        s.playerProgress,
-                        {
-                          width: `${
-                            duration
-                              ? Math.min(100, (time / duration) * 100)
-                              : 0
-                          }%`,
-                        },
-                      ]}
-                    />
-                    <View
-                      style={[
-                        s.timelineThumb,
-                        {
-                          left: `${
-                            duration
-                              ? Math.min(100, (time / duration) * 100)
-                              : 0
-                          }%`,
-                        },
-                      ]}
-                    />
+              <FocusScope id="04-timeline" layout="row" boundary="parent">
+                <Focusable
+                  occurrenceKey={occurrenceKey('player', 'timeline')}
+                  order={1}
+                  displayLabel=""
+                  enabled={loaded}
+                  accessibilityLabel={t(
+                    'Timeline, {elapsed} of {duration}. Left or right seeks 10 seconds. Select plays or pauses.',
+                    {
+                      elapsed: formatPlaybackTime(time),
+                      duration: formatPlaybackTime(duration),
+                    },
+                  )}
+                  onAdjust={delta => seek(delta * 10)}
+                  onPress={togglePlayback}
+                  focusStyle={timelineFocusStyle}
+                  style={s.timelineAction}
+                >
+                  <View style={s.timelineInset}>
+                    <View style={s.playerTrack}>
+                      <View
+                        style={[
+                          s.playerProgress,
+                          {
+                            width: `${
+                              duration
+                                ? Math.min(100, (time / duration) * 100)
+                                : 0
+                            }%`,
+                          },
+                        ]}
+                      />
+                      <View
+                        style={[
+                          s.timelineThumb,
+                          {
+                            left: `${
+                              duration
+                                ? Math.min(100, (time / duration) * 100)
+                                : 0
+                            }%`,
+                          },
+                        ]}
+                      />
+                    </View>
                   </View>
-                </View>
-              </Focusable>
+                </Focusable>
+              </FocusScope>
             )}
             <Text accessible={captionAccessible} style={s.footer}>
               {media.name} · {media.credit}
@@ -693,7 +740,7 @@ export default function Playback({
               scrollEnabled={stripFocused}
             >
               <FocusScope
-                id="choices"
+                id="05-choices"
                 layout="row"
                 boundary="parent"
                 style={s.row}

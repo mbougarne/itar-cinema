@@ -22,6 +22,7 @@ export type BrowseProps = {
   grid?: boolean;
   category?: Category;
   sort?: CatalogueSort;
+  sortNavigation?: { keys: readonly string[]; entry: string };
   onSave?: (film: Film) => void;
   savedIds?: readonly string[];
   saveReady?: boolean;

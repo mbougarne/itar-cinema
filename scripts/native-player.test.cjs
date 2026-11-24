@@ -196,8 +196,8 @@ test('tvOS guides the D-pad between visible player rows and leaves VoiceOver to 
   let bands = p.bands();
   assert.equal(bands.length, 2);
   assert.ok(bands.every(band => band.props.autoFocus && band.props.accessible === false));
-  assert.equal(bands[0].props.children[1].props.id, 'header-actions');
-  assert.equal(bands[1].props.children[0].props.id, 'transport');
+  assert.equal(bands[0].props.children[1].props.id, '01-header-actions');
+  assert.equal(bands[1].props.children[0].props.id, '02-transport');
   p.tick(3000);
   assert.equal(p.bands().length, 0);
   p.press('swipeUp');

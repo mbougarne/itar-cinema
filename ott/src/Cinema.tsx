@@ -74,15 +74,16 @@ const appleTV = Platform.OS === 'ios' && Platform.isTV;
 
 const ContentPane = appleTV ? TVFocusGuideView : View;
 
-const webContentOrder = Platform.OS === 'web' ? { order: 1 } : {};
-
 function CinemaShell(props: React.ComponentProps<typeof View>) {
+  const { language, rtl } = useCinemaLanguage();
+
   if (Platform.OS !== 'web') return <View {...props} />;
 
-  // Overscan can put mounted cards behind the sidebar. The two regions keep
-  // their left-to-right order regardless of either rail's scroll offset.
+  // Set the host direction so React Native Web resolves logical insets.
+  const locale = { lang: language, dir: rtl ? 'rtl' : 'ltr' } as const;
+
   return (
-    <View {...props}>
+    <View {...props} {...locale}>
       <FocusScope id="shell" layout="row" style={props.style}>
         {props.children}
       </FocusScope>
@@ -159,7 +160,8 @@ const CinemaRoutes = memo(function RouteTree({
   notice: string;
   setNotice: (value: string) => void;
 }) {
-  const { language, t } = useCinemaLanguage();
+  const { language, rtl, t } = useCinemaLanguage();
+  const webContentOrder = Platform.OS === 'web' ? { order: rtl ? -1 : 1 } : {};
   const { s } = useDesign();
   const reader = useScreenReaderEnabled();
   const readerLayout = appleTV && reader === true;

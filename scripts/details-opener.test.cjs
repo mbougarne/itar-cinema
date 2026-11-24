@@ -836,7 +836,7 @@ function fixture(inputKey, outcome = 'applied', platform = 'android', readDetail
     }
     if (name === './catalog') { return catalogue; }
     if (name === './catalog-types') { return evaluate('ott/src/catalog-types.ts'); }
-    if (name === './browser-navigation') return {BrowserNavigation: browserNavigation, useBrowserPointerDown: () => ({current: false})};
+    if (name === './browser-navigation') return {BrowserNavigation: browserNavigation, useBrowserFocusRoute: () => {}, useBrowserPointerDown: () => ({current: false})};
     if (name === './browse-layout') { return evaluate('ott/src/browse-layout.ts'); }
     if (name === './guide') { return {useGuide: () => ({guide: null})}; }
     if (name === './useCatalogue') {
@@ -1206,7 +1206,7 @@ test('Hero opens enriched details but returns to its original rendered occurrenc
   const hero = f.component('Hero', {id: props.id, active: true, film: {...film, source: 'tmdb'}, onOpen: props.onOpen});
   await new Promise(resolve => setImmediate(resolve)); hero.render();
   const explore = hero.find('Action', 'Open title details');
-  assert.equal(hero.find('FocusScope').props.layout, 'row', 'the leading virtualized rail publishes row alignment');
+  assert.equal(hero.find('FocusScope').props.layout, 'column', 'the leading rail groups CTA and thumbnail rows');
   assert.equal(explore.props.id, occurrenceKey(props.id, 'hero', film.id));
   explore.props.onPress(); f.app.render();
   assert.equal(f.app.find('Details').props.film.title, 'Enriched title');

@@ -1,6 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { AccessibilityInfo, ScrollView, Text, View } from 'react-native';
 import {
+  AccessibilityInfo,
+  Platform,
+  ScrollView,
+  Text,
+  View,
+} from 'react-native';
+import {
+  Focusable,
+  FocusScope,
   FocusVirtualizedRails,
   occurrenceKey,
   useScreenReaderEnabled,
@@ -14,6 +22,7 @@ import { Picture } from './components/Picture';
 import { useCinemaLanguage } from './language';
 import { useDesign } from './theme';
 import { captionAccessible } from './tv-accessibility';
+import { useBrowserFocusRoute } from './browser-navigation';
 
 export function PersonDetails({
   film,
@@ -71,10 +80,6 @@ export function PersonDetails({
     return () => request.abort();
   }, [film, member, attempt, person]);
 
-  useEffect(() => {
-    if (!restoreCredit && width > 0) onReady(bioKey);
-  }, [bioKey, restoreCredit, onReady, width]);
-
   const facts = [
     person?.department && ['Known for', person.department],
     person?.creditCount !== undefined && [
@@ -107,13 +112,57 @@ export function PersonDetails({
   const stillHeight = (cardWidth * 9) / 16;
   const height = stillHeight + 52 * u;
 
-  const credits = new Map(
-    (person?.credits ?? [])
-      .filter(value => value.id !== film.id)
-      .map(value => [
-        occurrenceKey('person', member.id, 'credit', value.id),
+  const credits = (person?.credits ?? [])
+    .filter(value => value.id !== film.id)
+    .map(value => {
+      const key = occurrenceKey('person', member.id, 'credit', value.id);
+
+      return {
         value,
-      ]),
+        target: {
+          occurrenceKey: key,
+          accessibilityLabel: `${value.title}, ${
+            value.kind === 'movie' ? 'Movie' : 'Series'
+          }`,
+          displayLabel: '',
+          outlineInsetBottom: 52 * u,
+          focusStyle: { accentColor: highContrast ? '#FFFFFF' : colors.accent },
+          onPress: () => onOpen(value, key),
+        },
+      };
+    });
+
+  const firstCreditKey = credits[0]?.target.occurrenceKey;
+  const web = Platform.OS === 'web';
+
+  const cardStyle = {
+    width: cardWidth,
+    height,
+    backgroundColor: 'transparent',
+  };
+
+  useEffect(() => {
+    if (width <= 0) return;
+
+    if (!restoreCredit) onReady(bioKey);
+    else if (web && firstCreditKey) onReady();
+  }, [bioKey, firstCreditKey, onReady, restoreCredit, web, width]);
+
+  useBrowserFocusRoute(width > 0 && !!firstCreditKey, (key, direction) =>
+    key === bioKey && direction === 'ArrowDown' ? firstCreditKey : undefined,
+  );
+
+  const renderCredit = (credit: Film) => (
+    <View accessible={false}>
+      <Picture
+        source={filmArtwork(credit)}
+        fallback="Artwork unavailable"
+        style={{ width: cardWidth, height: stillHeight, borderRadius: 8 * u }}
+      />
+      <Text accessible={false} numberOfLines={1} style={s.detailCardCaption}>
+        {credit.title}
+      </Text>
+    </View>
   );
 
   return (
@@ -205,75 +254,66 @@ export function PersonDetails({
           />
         </View>
       </View>
-      <View style={s.personCredits}>
+      <FocusScope
+        id="known-for"
+        boundary="parent"
+        restoreOnEntry
+        preferredKey={firstCreditKey}
+        style={s.personCredits}
+      >
         <Text accessibilityRole="header" style={s.heading}>
           {t('Known for')}
         </Text>
-        {width > 0 && credits.size > 0 ? (
-          <FocusVirtualizedRails
-            id="person-credits"
-            viewportRows={1}
-            horizontalAlignment="pinned"
-            viewportExtent={width}
-            rowExtent={height}
-            itemExtent={cardWidth + gap}
-            onReady={restoreCredit ? onReady : undefined}
-            rails={[
-              {
-                id: 'credits',
-                itemStyle: {
-                  width: cardWidth,
-                  height,
-                  marginEnd: gap,
-                  backgroundColor: 'transparent',
+        {width > 0 && credits.length > 0 ? (
+          web ? (
+            // The catalogue bounds credits to 16, so the browser can lay out
+            // the whole row in reading order and reveal each card as needed.
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              style={{ width, height }}
+              contentContainerStyle={{ gap }}
+            >
+              {credits.map(({ target, value }, order) => (
+                <Focusable
+                  key={target.occurrenceKey}
+                  {...target}
+                  order={order}
+                  style={cardStyle}
+                >
+                  {renderCredit(value)}
+                </Focusable>
+              ))}
+            </ScrollView>
+          ) : (
+            <FocusVirtualizedRails
+              id="person-credits"
+              viewportRows={1}
+              horizontalAlignment="nearest"
+              viewportExtent={width}
+              rowExtent={height}
+              itemExtent={cardWidth + gap}
+              onReady={restoreCredit ? onReady : undefined}
+              rails={[
+                {
+                  id: 'credits',
+                  itemStyle: { ...cardStyle, marginEnd: gap },
+                  items: credits.map(({ target }) => target),
                 },
-                items: [...credits].map(([key, value]) => ({
-                  occurrenceKey: key,
-                  accessibilityLabel: `${value.title}, ${
-                    value.kind === 'movie' ? 'Movie' : 'Series'
-                  }`,
-                  displayLabel: '',
-                  outlineInsetBottom: 52 * u,
-                  focusStyle: {
-                    accentColor: highContrast ? '#FFFFFF' : colors.accent,
-                  },
-                  onPress: () => onOpen(value, key),
-                })),
-              },
-            ]}
-            renderItem={item => {
-              const credit = credits.get(item.occurrenceKey);
+              ]}
+              renderItem={(_, index) => {
+                const credit = credits[index]?.value;
 
-              if (!credit) return null;
-
-              return (
-                <View accessible={false}>
-                  <Picture
-                    source={filmArtwork(credit)}
-                    fallback="Artwork unavailable"
-                    style={{
-                      width: cardWidth,
-                      height: stillHeight,
-                      borderRadius: 8 * u,
-                    }}
-                  />
-                  <Text
-                    accessible={false}
-                    numberOfLines={1}
-                    style={s.detailCardCaption}
-                  >
-                    {credit.title}
-                  </Text>
-                </View>
-              );
-            }}
-          />
+                return credit ? renderCredit(credit) : null;
+              }}
+            />
+          )
         ) : (
           person && (
             <Text style={s.muted}>{t('No film or TV credits available.')}</Text>
           )
         )}
-      </View>
+      </FocusScope>
     </View>
   );
 }

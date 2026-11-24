@@ -69,7 +69,7 @@ function fixture(playback = {}, rtl = false) {
   const onClose = () => closed++;
   const focus = function () { document.activeElement = this; tree.props.onFocusCapture({target: this}); };
   const dialog = {focus, closest: () => null, querySelectorAll: () => [playControl]};
-  const playControl = {focus, closest() { return this; }};
+  const playControl = {focus, closest(selector) { return selector === 'button, input' ? this : null; }};
   const render = () => {
     cursor = refIndex = effectIndex = callbackIndex = 0;
     tree = module.exports.default({title: 'Test title', onClose, ...playback}); first = false;
@@ -133,8 +133,10 @@ test('the timeline direction follows the interface while keeping elapsed time as
   }
 });
 
-test('player arrows follow the utility, transport and timeline rows in both layout directions', () => {
-  const f = fixture();
+test('player arrows follow the timeline, play next, transport and related rows', () => {
+  const entry = title => ({title, key: title, play() {}});
+  const next = entry('S1 E2');
+  const f = fixture({choices: {nextEpisode: next, episodes: [next, entry('S1 E3')], related: []}});
   f.all().find(n => n.type === 'video').props.onLoadedMetadata({currentTarget: {duration: 60}});
   const player = f.render();
   let focused;
@@ -145,6 +147,7 @@ test('player arrows follow the utility, transport and timeline rows in both layo
   const rows = f.all().filter(n => n.props['data-player-row']).map(node => {
     const row = {
       dir: 'ltr',
+      getAttribute: attribute => node.props[attribute],
       contains: target => row.children.includes(target),
       querySelector: () => row.children.find(control => control.entry && !control.disabled),
     };
@@ -162,20 +165,43 @@ test('player arrows follow the utility, transport and timeline rows in both layo
     player.props.onKeyDown({key, target: focused, currentTarget: modal, preventDefault() {}, stopPropagation() {}});
     return focused.label;
   }
-  focused = rows[1].querySelector();
+  const row = name => rows.find(band => band.getAttribute('data-player-row') === name);
+  focused = row('transport').querySelector();
   assert.equal(focused.label, 'Play');
   assert.equal(arrow('ArrowLeft'), 'Rewind 10 seconds');
   assert.equal(arrow('ArrowRight'), 'Play');
-  assert.equal(arrow('ArrowRight'), 'Forward 10 seconds');
-  assert.equal(arrow('ArrowDown'), 'Playback position');
+  assert.equal(arrow('ArrowUp'), 'Playback position');
+  assert.equal(arrow('ArrowDown'), 'Play next · S1 E2');
+  assert.equal(arrow('ArrowDown'), 'Play');
+  assert.equal(arrow('ArrowDown'), 'S1 E2');
+  assert.equal(arrow('ArrowRight'), 'S1 E3');
   assert.equal(arrow('ArrowUp'), 'Play');
+  assert.equal(arrow('ArrowUp'), 'Playback position');
   assert.equal(arrow('ArrowUp'), 'Mute');
   assert.equal(arrow('ArrowLeft'), 'Close player');
-  assert.equal(arrow('ArrowDown'), 'Play');
-  rows[1].dir = 'rtl';
+  assert.equal(arrow('ArrowDown'), 'Playback position');
+  row('next').children[0].disabled = true;
+  assert.equal(arrow('ArrowDown'), 'Play', 'skip an unavailable Play Next card');
+  row('transport').dir = 'rtl';
   assert.equal(arrow('ArrowLeft'), 'Forward 10 seconds');
-  rows[2].children[0].disabled = true;
-  assert.equal(arrow('ArrowDown'), 'Forward 10 seconds');
+  row('progress').children[0].disabled = true;
+  assert.equal(arrow('ArrowUp'), 'Mute', 'skip an unavailable timeline');
+});
+
+test('the live drawer exposes the tuned channel as current and skips it for activation', () => {
+  const play = () => {};
+  const f = fixture({channels: [
+    {key: 'current', title: 'Tuned', current: true, play},
+    {key: 'other', title: 'Other', play},
+  ]});
+  f.find('Channels & content').props.onClick();
+  f.render();
+  const current = f.all().find(node => node.props['aria-current']);
+  assert.equal(current.props.disabled, true);
+  assert.equal(current.props.onClick, undefined);
+  const other = f.all().find(node => node.type === 'button' && node.props.onClick === play);
+  assert.ok(other);
+  assert.ok(!other.props.disabled);
 });
 
 test('only continuous playing in TV navigation mode hides the overlay after three idle seconds', t => {
@@ -220,7 +246,7 @@ test('a hidden remote press consumes its repeats and release, restores focus and
     return !!event.prevented && !!event.stopped;
   };
   video.onPlay(); video.onPlaying(); f.render();
-  const lastControl = {disabled: false, closest() { return this; }, focus: f.playControl.focus};
+  const lastControl = {disabled: false, closest(selector) { return selector === 'button, input' ? this : null; }, focus: f.playControl.focus};
   lastControl.focus();
   for (const [key, code] of [['Enter', 13], [' ', 32], ['ArrowDown', 40], ['Unidentified', 39], ['Tab', 9]]) {
     t.mock.timers.tick(3000);

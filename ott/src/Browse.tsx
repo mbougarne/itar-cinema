@@ -10,6 +10,7 @@ import React, {
 import { Platform, Text, View, useWindowDimensions } from 'react-native';
 import {
   occurrenceKey,
+  FocusScope,
   useIsFocused,
   useScreenReaderEnabled,
   useFocusCommands,
@@ -25,7 +26,11 @@ import { useCatalogue } from './useCatalogue';
 import { Picture } from './components/Picture';
 import { filmArtwork } from './artwork';
 import Hero, { heroTargets } from './Hero';
-import { BrowserNavigation } from './browser-navigation';
+import {
+  BrowserNavigation,
+  browserFocusedOccurrenceKey,
+  useBrowserFocusRoute,
+} from './browser-navigation';
 import { sampleFilm, openFilmTitles, bigBuckBunny } from './demo-stream';
 import { OpenFilms } from './OpenFilms';
 import { WeekendMovies } from './WeekendMovies';
@@ -76,6 +81,7 @@ export default function Browse({
   previewsEnabled = true,
   grid = false,
   sort,
+  sortNavigation,
   category = 'All',
 }: BrowseProps) {
   const { language, t } = useCinemaLanguage();
@@ -582,6 +588,7 @@ export default function Browse({
         horizontalAlignment:
           chart || openFilms || weekend || curated ? 'nearest' : undefined,
         leadingExtent: chart ? 285 * u : undefined,
+        contentInsetStart: featured ? cardInset : undefined,
         interactiveHeader: curated,
         headerExtent: chart ? 0 : undefined,
         rowExtent: featured
@@ -592,7 +599,7 @@ export default function Browse({
           : undefined,
         itemExtent: cardWidth + cardGap,
         itemStyle: {
-          marginStart: cardInset,
+          marginStart: featured ? undefined : cardInset,
           width: cardWidth,
           height: imageHeight,
           borderRadius: 8 * u,
@@ -987,6 +994,49 @@ export default function Browse({
     commands,
   ]);
 
+  const firstGridItems = model.rails.find(row => row.id === 'grid-0')?.items;
+  const firstGridKey = firstGridItems?.[0]?.occurrenceKey;
+  const queuedSortEntry = useRef<string | undefined>(undefined);
+
+  useBrowserFocusRoute(active && !!sortNavigation, (key, direction) => {
+    if (!sortNavigation) return;
+
+    if (direction === 'ArrowDown' && sortNavigation.keys.includes(key)) {
+      if (!firstGridKey && pending) {
+        queuedSortEntry.current = key;
+
+        return false;
+      }
+
+      return firstGridKey;
+    }
+
+    if (
+      direction === 'ArrowUp' &&
+      firstGridItems?.some(item => item.occurrenceKey === key)
+    ) {
+      return sortNavigation.entry;
+    }
+  });
+
+  useLayoutEffect(() => {
+    const source = queuedSortEntry.current;
+
+    if (!source) return;
+
+    if (!active || browserFocusedOccurrenceKey() !== source) {
+      queuedSortEntry.current = undefined;
+
+      return;
+    }
+
+    if (!firstGridKey && pending) return;
+
+    queuedSortEntry.current = undefined;
+
+    if (firstGridKey) commands.focusByKey(firstGridKey);
+  }, [active, commands, firstGridKey, pending]);
+
   const content = (
     <View style={s.fill}>
       {Platform.OS === 'web' && !!state.error && (
@@ -1034,6 +1084,7 @@ export default function Browse({
             id="catalogue"
             rails={model.rails}
             revealFullRow={featured}
+            rtl={featured && language === 'ar-SA'}
             rowEntry={featured ? 'remembered' : 'nearest'}
             horizontalAlignment={featured ? 'pinned' : 'nearest'}
             rowExtent={rowExtent}
@@ -1063,8 +1114,19 @@ export default function Browse({
               ) : undefined
             }
             listHeaderExtent={featured && featuredFilm ? height : 0}
-            listHeaderScope={
-              featured && featuredFilm ? 'hero-actions' : undefined
+            listHeaderScope={featured && featuredFilm ? 'hero' : undefined}
+            headerExitKeys={
+              featuredFilms.length > 1
+                ? featuredFilms.map(film =>
+                    occurrenceKey(id, 'hero-slide', film.id),
+                  )
+                : undefined
+            }
+            headerReturnKey={
+              featuredFilm &&
+              (featuredFilms.length > 1
+                ? occurrenceKey(id, 'hero-slide', featuredFilm.id)
+                : occurrenceKey(id, 'hero', featuredFilm.id))
             }
             listHeaderItems={
               featuredFilm
@@ -1123,6 +1185,10 @@ export default function Browse({
     <HomePreviewProvider active={active && previewsEnabled}>
       <HomeGuideSelection value={guideSelection}>{content}</HomeGuideSelection>
     </HomePreviewProvider>
+  ) : sortNavigation ? (
+    <FocusScope id="03-results" boundary="parent" style={s.fill}>
+      {content}
+    </FocusScope>
   ) : (
     content
   );

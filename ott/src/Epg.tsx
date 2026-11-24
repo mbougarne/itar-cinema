@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { BackHandler, Text, View } from 'react-native';
 import {
   FocusScope,
@@ -18,6 +18,9 @@ import { guideWindow } from './guide-data';
 
 type Selection = { programme: Programme; key: string; channel: string };
 
+const backKey = occurrenceKey('epg', 'back');
+const nowKey = occurrenceKey('epg', 'now');
+
 export default function Epg({
   onClose,
   onTune,
@@ -35,6 +38,7 @@ export default function Epg({
   const { guide, error, retry } = useGuide(true, mode);
   const [selection, setSelection] = useState<Selection | null>(null);
   const selected = selection?.programme;
+  const resumeKey = useRef(backKey);
   const [requested, setRequested] = useState<number | null>(null);
   const [now, setNow] = useState(() => Date.now() / 1000);
   const commands = useFocusCommands();
@@ -44,12 +48,10 @@ export default function Epg({
   useEffect(() => {
     if (!ready || !active || reader) return;
 
-    const request = commands.focusByKey(
-      selection?.key ?? occurrenceKey('epg', 'back'),
-    );
+    const request = commands.focusByKey(resumeKey.current);
 
     return () => request.cancel();
-  }, [active, commands, ready, reader, selection?.key]);
+  }, [active, commands, ready, reader]);
 
   useEffect(() => {
     const timer = setInterval(() => setNow(Date.now() / 1000), 60000);
@@ -71,9 +73,15 @@ export default function Epg({
 
   const { start, end, previous, next } = guideWindow(guide, now, requested);
 
-  const move = (time: number | null) => {
+  const move = (time: number | null, control?: 'previous' | 'next') => {
+    resumeKey.current = backKey;
     setSelection(null);
     setRequested(time);
+
+    if (control && !reader && !guideWindow(guide, now, time)[control]) {
+      // The pressed button becomes disabled at this end of the schedule.
+      commands.focusByKey(nowKey);
+    }
   };
 
   const scale = (1380 * u) / (end - start);
@@ -83,16 +91,14 @@ export default function Epg({
       <FocusScope
         active={active}
         accessibilityPaneTitle={reader ? 'TV guide' : undefined}
-        preferredKey={
-          reader ? selection?.key ?? occurrenceKey('epg', 'back') : undefined
-        }
+        preferredKey={reader ? selection?.key ?? backKey : undefined}
         id="guide"
         layout="spatial"
         style={[s.profilePage, { padding: 48 * u }, !active && s.hidden]}
       >
         <View style={[s.row, s.guideHeader]}>
           <Action
-            id={occurrenceKey('epg', 'back')}
+            id={backKey}
             label="Back to Home"
             tvDescription={
               offline
@@ -126,12 +132,12 @@ export default function Epg({
             label="Previous hour"
             displayLabel="‹  Previous"
             enabled={previous}
-            onPress={() => move(start - 3600)}
+            onPress={() => move(start - 3600, 'previous')}
             style={s.filter}
           />
           <Action
             order={1}
-            id={occurrenceKey('epg', 'now')}
+            id={nowKey}
             label="Now"
             tvDescription={`${new Date(
               start * 1000,
@@ -145,7 +151,7 @@ export default function Epg({
             label="Next hour"
             displayLabel="Next  ›"
             enabled={next}
-            onPress={() => move(start + 3600)}
+            onPress={() => move(start + 3600, 'next')}
             style={s.filter}
           />
           <Text accessible={captionAccessible} style={s.muted}>
@@ -216,6 +222,8 @@ export default function Epg({
                       tvDescription={p.subtitle}
                       displayLabel={`${guideTime(p.start)}  ${p.title}`}
                       onPress={() => {
+                        resumeKey.current = key;
+
                         setSelection({
                           programme: p,
                           key,

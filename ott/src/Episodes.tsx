@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Platform, ScrollView, Text, View } from 'react-native';
 import {
   FocusScope,
   occurrenceKey,
+  useFocusCommands,
   useFocusState,
 } from '@bougarnem/itar/react';
 import { CinemaRails } from './components/CinemaRails';
@@ -15,6 +16,10 @@ import { cachedSeason, loadSeason } from './detail-data';
 import type { EpisodePlayback, VideoChoice } from './playback-history';
 import { useCinemaLanguage } from './language';
 import { useDesign } from './theme';
+import {
+  browserFocusedOccurrenceKey,
+  useBrowserFocusRoute,
+} from './browser-navigation';
 
 export const fixtureSeasons: readonly Season[] = [
   { number: 0, name: 'Specials' },
@@ -79,6 +84,10 @@ export function episodeGridLayout(width: number, u: number) {
 export function Episodes({
   film,
   seasons,
+  selectedSeason,
+  focusedSeason,
+  onSelectSeason,
+  onFocusSeason,
   width,
   height,
   active,
@@ -90,6 +99,10 @@ export function Episodes({
 }: {
   film: Film;
   seasons: readonly Season[];
+  selectedSeason?: number;
+  focusedSeason?: number;
+  onSelectSeason: (season: number) => void;
+  onFocusSeason: (season: number) => void;
   width: number;
   height?: number;
   active: boolean;
@@ -102,10 +115,14 @@ export function Episodes({
   const { t } = useCinemaLanguage();
   const { s, u, colors } = useDesign();
   const focus = useFocusState();
-  const [selected, setSelected] = useState<number>();
+  const commands = useFocusCommands();
+
+  const queuedEpisode = useRef<{ source: string; season: number } | undefined>(
+    undefined,
+  );
 
   const season =
-    seasons.find(item => item.number === selected) ??
+    seasons.find(item => item.number === selectedSeason) ??
     seasons.find(item => item.number > 0) ??
     seasons[0];
 
@@ -180,6 +197,81 @@ export function Episodes({
 
   useEffect(() => () => onEpisodeFocus(false), [onEpisodeFocus]);
 
+  const seasonKeys = new Map(
+    seasons.map(value => [
+      occurrenceKey('details', film.id, 'season', String(value.number)),
+      value.number,
+    ]),
+  );
+
+  const seasonEntry = [...seasonKeys].find(
+    ([, value]) =>
+      value ===
+      (seasons.some(item => item.number === focusedSeason)
+        ? focusedSeason
+        : number),
+  )?.[0];
+
+  const episodeTab = occurrenceKey('details', 'tab', 'Episodes');
+  const retryKey = occurrenceKey('details', 'episode-retry');
+
+  const focusedNumber =
+    focus.occurrenceKey && seasonKeys.get(focus.occurrenceKey);
+
+  useEffect(() => {
+    if (active && typeof focusedNumber === 'number')
+      onFocusSeason(focusedNumber);
+  }, [active, focusedNumber, onFocusSeason]);
+
+  useBrowserFocusRoute(active && width > 0, (key, direction) => {
+    if (direction === 'ArrowUp') {
+      if (seasonKeys.has(key)) return episodeTab;
+
+      if (
+        key === retryKey ||
+        queue.slice(0, columns).some(item => item.key === key)
+      ) {
+        return seasonEntry;
+      }
+    }
+
+    if (direction === 'ArrowDown') {
+      if (key === episodeTab) return seasonEntry;
+
+      if (seasonKeys.has(key)) {
+        if (!episodes && !current?.error && number !== undefined) {
+          queuedEpisode.current = { source: key, season: number };
+        }
+
+        return queue[0]?.key ?? (current?.error ? retryKey : false);
+      }
+    }
+  });
+
+  const firstEpisodeKey = queue[0]?.key;
+
+  useLayoutEffect(() => {
+    const intent = queuedEpisode.current;
+
+    if (!intent) return;
+
+    if (
+      !active ||
+      browserFocusedOccurrenceKey() !== intent.source ||
+      number !== intent.season
+    ) {
+      queuedEpisode.current = undefined;
+
+      return;
+    }
+
+    if (!episodes && !current?.error) return;
+
+    queuedEpisode.current = undefined;
+
+    if (firstEpisodeKey) commands.focusByKey(firstEpisodeKey);
+  }, [active, commands, current?.error, episodes, firstEpisodeKey, number]);
+
   if (!season || width <= 0) return null;
 
   const cards = new Map(
@@ -218,7 +310,7 @@ export function Episodes({
   const rowCount = Math.ceil(gridItems.length / columns);
 
   return (
-    <FocusScope id="episodes" boundary="parent" style={s.fill}>
+    <FocusScope id="episodes" layout="column" boundary="parent" style={s.fill}>
       <View style={s.seasonHeader}>
         {Platform.OS !== 'web' && (
           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
@@ -226,6 +318,8 @@ export function Episodes({
               id="seasons"
               layout="row"
               boundary="parent"
+              restoreOnEntry
+              preferredKey={seasonEntry}
               style={s.row}
             >
               {seasons.map((value, index) => (
@@ -245,7 +339,7 @@ export function Episodes({
                   quiet
                   style={[s.seasonPill, { minWidth: seasonExtent - 12 * u }]}
                   highContrast={highContrast}
-                  onPress={() => setSelected(value.number)}
+                  onPress={() => onSelectSeason(value.number)}
                 />
               ))}
             </FocusScope>
@@ -281,7 +375,7 @@ export function Episodes({
                   focusStyle,
                   baseAccentColor:
                     value.number === season.number ? colors.accent : '#DCE5ED',
-                  onPress: () => setSelected(value.number),
+                  onPress: () => onSelectSeason(value.number),
                 })),
               },
             ]}
@@ -376,7 +470,7 @@ export function Episodes({
         />
       ) : current?.error ? (
         <Action
-          id={occurrenceKey('details', 'episode-retry')}
+          id={retryKey}
           label="Retry episodes"
           onPress={() => {
             setResult(undefined);

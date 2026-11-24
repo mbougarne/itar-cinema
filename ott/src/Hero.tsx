@@ -1,4 +1,10 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { AccessibilityInfo, Text, View } from 'react-native';
 import {
   FocusScope,
@@ -16,6 +22,7 @@ import { filmArtwork } from './artwork';
 import { demoForTitle } from './demo-stream';
 import { useCinemaLanguage } from './language';
 import { useDesign } from './theme';
+import { useBrowserFocusRoute } from './browser-navigation';
 import { PreviewSession } from './components/HomePreviewCard';
 import { Metadata, PlaybackBadges } from './components/Metadata';
 
@@ -87,7 +94,7 @@ export default function Hero({
   saveReady?: boolean;
   highContrast: boolean;
 }) {
-  const { t } = useCinemaLanguage();
+  const { t, rtl } = useCinemaLanguage();
   const { s, u } = useDesign();
   const [metadata, setMetadata] = useState(() => cachedDetails(film)?.film);
   const details = metadata?.id === film.id ? metadata : film;
@@ -185,6 +192,79 @@ export default function Hero({
 
   const playKey = keys[0].occurrenceKey;
   const infoKey = keys[2].occurrenceKey;
+  const guideKey = occurrenceKey(id, 'hero-guide');
+
+  const thumbnailKey =
+    slides.length > 1 && slides[slide]
+      ? occurrenceKey(id, 'hero-slide', slides[slide].id)
+      : undefined;
+
+  const saveKey = keys[1].occurrenceKey;
+
+  const actions = useMemo(
+    () => [
+      playKey,
+      ...(onSave && saveReady ? [saveKey] : []),
+      infoKey,
+      ...(onGuide ? [guideKey] : []),
+    ],
+    [playKey, onSave, saveReady, saveKey, infoKey, onGuide, guideKey],
+  );
+
+  const lastAction = useRef<string | undefined>(undefined);
+
+  useEffect(() => {
+    if (active && focusedKey && actions.includes(focusedKey)) {
+      lastAction.current = focusedKey;
+    }
+  }, [active, actions, focusedKey]);
+
+  const actionEntry =
+    lastAction.current && actions.includes(lastAction.current)
+      ? lastAction.current
+      : playKey;
+
+  useBrowserFocusRoute(active, (key, direction) => {
+    const index = actions.indexOf(key);
+    const horizontal = direction === 'ArrowRight' || direction === 'ArrowLeft';
+    const step = (direction === 'ArrowRight') !== rtl ? 1 : -1;
+
+    if (index >= 0) {
+      if (horizontal) {
+        // The leading edge of the CTA row still opens the sidebar.
+        return (
+          actions[index + step] ??
+          (step > 0 ? false : rtl ? occurrenceKey('nav', 'Home') : undefined)
+        );
+      }
+
+      if (direction === 'ArrowDown') {
+        lastAction.current = key;
+
+        return thumbnailKey;
+      }
+
+      return false;
+    }
+
+    const thumbnailIndex =
+      slides.length > 1
+        ? slides.findIndex(
+            title => occurrenceKey(id, 'hero-slide', title.id) === key,
+          )
+        : -1;
+
+    if (thumbnailIndex < 0) return;
+
+    if (direction === 'ArrowUp')
+      return actions.find(action => action === lastAction.current) ?? playKey;
+
+    if (horizontal) {
+      const next = slides[thumbnailIndex + step];
+
+      return next ? occurrenceKey(id, 'hero-slide', next.id) : false;
+    }
+  });
 
   return (
     <View style={[s.homeHero, height !== undefined && { height }]}>
@@ -202,12 +282,7 @@ export default function Hero({
           ) : undefined
         }
       />
-      <FocusScope
-        id="hero-actions"
-        layout="row"
-        boundary="parent"
-        style={s.fill}
-      >
+      <FocusScope id="hero" layout="column" boundary="parent" style={s.fill}>
         <View style={s.homeHeroStage}>
           <View style={s.homeHeroCopy}>
             <Text accessible={captionAccessible} style={s.seriesKicker}>
@@ -234,7 +309,14 @@ export default function Hero({
               rating={details.certification}
               region={details.certificationRegion}
             />
-            <View style={s.homeHeroActions}>
+            <FocusScope
+              id="hero-actions"
+              layout="row"
+              boundary="parent"
+              restoreOnEntry
+              preferredKey={actionEntry}
+              style={s.homeHeroActions}
+            >
               <Action
                 id={playKey}
                 label={canPlay ? 'Play demo' : 'Open title details'}
@@ -271,15 +353,15 @@ export default function Hero({
               />
               {onGuide && (
                 <Action
-                  order={slides.length + 3}
-                  id={occurrenceKey(id, 'hero-guide')}
+                  order={3}
+                  id={guideKey}
                   label="TV guide"
                   style={s.heroGuideAction}
                   highContrast={highContrast}
-                  onPress={() => onGuide(occurrenceKey(id, 'hero-guide'))}
+                  onPress={() => onGuide(guideKey)}
                 />
               )}
-            </View>
+            </FocusScope>
           </View>
           {slides.length > 1 && (
             <View style={s.heroThumbnails}>
@@ -291,11 +373,18 @@ export default function Hero({
                   {slide + 1} / {slides.length}
                 </Text>
               </View>
-              <View style={s.heroThumbnailRow}>
+              <FocusScope
+                id="hero-thumbnails"
+                layout="row"
+                boundary="parent"
+                restoreOnEntry
+                preferredKey={thumbnailKey}
+                style={s.heroThumbnailRow}
+              >
                 {slides.map((title, index) => (
                   <Action
                     key={title.id}
-                    order={index + 3}
+                    order={index}
                     id={keys[index + 3].occurrenceKey}
                     label={t(
                       slide === index
@@ -321,7 +410,7 @@ export default function Hero({
                     />
                   </Action>
                 ))}
-              </View>
+              </FocusScope>
             </View>
           )}
         </View>
